@@ -1,0 +1,152 @@
+*, *:after, *:before {
+  box-sizing: border-box; }
+
+body {
+  background-color: #fefefe;
+  font-family: 'Open Sans', sans-serif;
+  color: #2c3e50; }
+
+.number {
+  font-family: 'Montserrat', sans-serif; }
+
+h1, h2, h3, h4 {
+  font-family: 'Slabo 27px', serif; }
+
+.form-field {
+  width: 100%;
+  margin-bottom: 20px; }
+  .form-field input[type="text"],
+  .form-field input[type="number"],
+  .form-field input[type="email"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    outline: 0;
+    box-shadow: none;
+    margin-top: 5px;
+    padding-left: 10px; }
+
+#e-liquid-app {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; }
+
+header {
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  flex: 100%; }
+  header #brand {
+    font-size: 24px;
+    line-height: 60px;
+    margin: 0;
+    font-family: 'Poiret One', cursive; }
+
+#flavour-list,
+#liquid-list {
+  padding: 0 20px;
+  width: 300px; }
+  @media (max-width: 1400px) {
+    #flavour-list,
+    #liquid-list {
+      width: 200px; } }
+
+#liquid-list {
+  border-right: 1px solid #ccc;
+  min-height: calc(100vh - 61px); }
+
+#mix-area {
+  flex: 1; }
+  #mix-area .name-row {
+    padding: 0 20px;
+    margin-top: 20px; }
+    #mix-area .name-row input {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #ccc;
+      height: 60px;
+      line-height: 60px;
+      outline: 0;
+      font-family: 'Poiret One', cursive;
+      font-size: 40px; }
+  #mix-area .mix-containers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; }
+    #mix-area .mix-containers .mix-container {
+      padding: 0 20px;
+      flex: 1; }
+      @media (max-width: 1200px) {
+        #mix-area .mix-containers .mix-container {
+          flex: 100%; } }
+  #mix-area #flavour-container .flavour-field {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc; }
+    #mix-area #flavour-container .flavour-field input {
+      width: 50px;
+      height: 30px;
+      line-height: 30;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      outline: 0;
+      box-shadow: none;
+      margin: 0;
+      padding-left: 5px; }
+
+#mix-area #mixing-table {
+  width: 100%;
+  padding: 0 20px; }
+
+#mix-area #mixing-table table {
+  border-collapse: collapse;
+  width: 100%; }
+  #mix-area #mixing-table table tr {
+    border-bottom: 1px solid #ccc; }
+    #mix-area #mixing-table table tr:first-of-type {
+      border-bottom: 1px solid #333; }
+    #mix-area #mixing-table table tr:last-of-type {
+      border-bottom: none; }
+  #mix-area #mixing-table table td, #mix-area #mixing-table table th {
+    text-align: left;
+    padding: 10px 10px 10px 0; }
+
+.actions-row {
+  padding: 0 20px;
+  margin-top: 20px;
+  text-align: right;
+  margin-bottom: 40px; }
+  .actions-row button {
+    margin-left: 20px; }
+
+#flavour-list {
+  border-left: 1px solid #ccc;
+  min-height: calc(100vh - 61px); }
+  #flavour-list #flavour-form {
+    border-top: 1px solid #333;
+    padding-top: 20px; }
+    #flavour-list #flavour-form h3 {
+      margin: 0 0 10px 0; }
+    #flavour-list #flavour-form button {
+      margin-bottom: 20px; }
+
+.searchable-list .searchable-list--search-results {
+  padding: 0;
+  list-style-type: none;
+  margin: 0 0 20px; }
+  .searchable-list .searchable-list--search-results .searchable-list--search-result {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    cursor: pointer; }
+
+/*# sourceMappingURL=style.css.map */
