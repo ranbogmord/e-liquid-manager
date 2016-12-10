@@ -1,0 +1,7 @@
+{
+  "apps": [{
+    "name": "eliquidmanager",
+    "script": "./index.js",
+    "watch": true
+  }]
+}
