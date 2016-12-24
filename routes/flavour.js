@@ -17,7 +17,8 @@ module.exports = app => {
       const flavour = new models.Flavour({
         name: req.data.name,
         basePercent: req.data.basePercent,
-        isVg: req.data.isVg || false
+        isVg: req.data.isVg || false,
+        addedBy: req.handshake.user._id
       });
 
       flavour.save(err => {

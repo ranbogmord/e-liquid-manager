@@ -24,6 +24,14 @@
         self.rawData.push(data);
       });
 
+      IOConnection.on('liquid:updated', function (data) {
+        var item = self.rawData.filter(function (d) {
+          return d._id === data._id;
+        }).pop();
+
+        self.rawData.splice(self.rawData.indexOf(item), 1, data);
+      });
+
       IOConnection.on('liquid:archived', function (data) {
         var item = self.rawData.filter(function (d) {
           return d._id === data._id;
@@ -153,6 +161,7 @@
     methods: {
       setCurrentLiquid: function (data) {
         this.currentLiquid = {
+          _id: data._id,
           name: data.name,
           base: {
             nicStrength: data.base.nicStrength
@@ -191,7 +200,7 @@
           self.resetFlavourForm();
         });
       },
-      createLiquid: function () {
+      saveLiquid: function () {
         var self = this;
 
         const liquid = JSON.parse(JSON.stringify(this.currentLiquid));
@@ -201,7 +210,7 @@
           return;
         }
 
-        IOConnection.emit('liquid:create', {
+        let data = {
           name: liquid.name,
           base: {
             nicStrength: liquid.base.nicStrength
@@ -212,7 +221,15 @@
             nicStrength: liquid.target.nicStrength
           },
           flavours: liquid.flavours
-        }, function (res) {
+        };
+        let action = "liquid:create";
+
+        if (liquid._id) {
+          data._id = liquid._id;
+          action = "liquid:update";
+        }
+
+        IOConnection.emit(action, data, function (res) {
           console.log("response", res);
           if (res.error) {
             if (typeof res.error == 'object') {
@@ -238,6 +255,7 @@
       },
       resetLiquidForm: function () {
         this.setCurrentLiquid({
+          _id: null,
           name: '',
           base: {
             nicStrength: 30

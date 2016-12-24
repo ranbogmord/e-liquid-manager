@@ -17,6 +17,7 @@ const liquidSchema = new Schema({
       perc: { type: Number, required: true }
     })
   ],
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() }
