@@ -99,7 +99,7 @@ module.exports = app => {
             path: 'flavours.flavour'
           }, (err, liquid) => {
             if (err) return;
-            app.io.broadcast('liquid:updated', liquid);
+            req.io.emit('liquid:updated', liquid);
             req.io.respond(liquid);
           });
         });
