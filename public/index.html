@@ -102,13 +102,13 @@
                     </tr>
                     <tr :class="{error: r.ml < 0}" v-for="r in mixingTableRows">
                         <td>{{ r.name }}</td>
-                        <td>{{ r.ml | round(2) }}</td>
-                        <td>{{ r.perc | round(2) }}</td>
+                        <td>{{ r.ml | round(2) }} ml</td>
+                        <td>{{ r.perc | round(2) }} %</td>
                     </tr>
                     <tr>
                         <th>Totals</th>
-                        <th>{{ mixingTableTotals.ml | round(2) }}</th>
-                        <th>{{ mixingTableTotals.perc | round(0) }}</th>
+                        <th>{{ mixingTableTotals.ml | round(2) }} ml</th>
+                        <th>{{ mixingTableTotals.perc | round(0) }} %</th>
                     </tr>
                 </table>
             </div>
