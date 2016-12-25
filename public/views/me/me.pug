@@ -1,0 +1,26 @@
+extends ../layout.pug
+
+block append styles
+    link(rel="stylesheet", href="/css/buttons.css")
+    link(rel="stylesheet", href="/css/user.css")
+
+block content
+    header#main-header
+        h1#brand E-Liquid Manager
+
+        ul#menu
+            li
+                a(href="/") Mixing
+            li
+                a(href="/logout") Logout
+    div#user-form
+        form(action="/me", method="post")
+            h2.form-header Edit user
+            div.form-field
+                label
+                    input(type="email", name="email", placeholder="email", value=email)
+            div.form-field
+                label
+                    input(type="password", name="password", placeholder="password", value="")
+            div.actions-row
+                input(type="submit", value="Save").button.primary

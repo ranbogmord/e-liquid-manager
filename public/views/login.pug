@@ -1,0 +1,18 @@
+extends layout.pug
+
+block append styles
+    link(rel="stylesheet", href="/css/buttons.css")
+    link(rel="stylesheet", href="/css/login.css")
+
+block content
+    div#login-box
+        header
+            h1 E-Liquid Manager
+
+            form(action="/login", method="post")
+                label
+                    input(type="text", name="username", placeholder="username")
+                label
+                    input(type="password", name="password", placeholder="password")
+                div.actions
+                    input(type="submit", value="Login").button.primary
