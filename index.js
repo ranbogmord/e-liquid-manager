@@ -38,13 +38,15 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore
 }));
-
 app.io.set('authorization', passportIO.authorize({
   cookieParser: cookieParser,
   key: 'connect.sid',
   secret: process.env.SESSION_SECRET || "Veronica!",
   store: sessionStore
 }));
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'public/views'));
 
 // User authentication
 passport.use(new LocalStrategy((username, password, done) => {

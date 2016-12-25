@@ -1,0 +1,47 @@
+header#main-header {
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  flex: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  #brand {
+    font-size: 24px;
+    line-height: 60px;
+    margin: 0;
+    font-family: 'Poiret One', cursive;
+    color: #2c3e50;
+  }
+
+  #menu {
+    margin: 0 0 0 auto;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    li {
+
+      a {
+        text-decoration: none;
+        color: #2c3e50;
+        background: #fefefe;
+        transition: background 0.2s ease, color 0.2s ease;
+        display: block;
+        height: 59px;
+        padding: 0 20px;
+        line-height: 60px;
+
+        &:hover {
+          color: #fefefe;
+          background: #2c3e50;
+        }
+      }
+    }
+  }
+}
