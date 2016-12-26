@@ -48,6 +48,8 @@ app.io.set('authorization', passportIO.authorize({
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'public/views'));
 
+app.use(require('morgan')('combined'));
+
 // User authentication
 passport.use(new LocalStrategy((username, password, done) => {
   models.User.findOne({
@@ -102,7 +104,10 @@ fs.readdirSync(path.join(__dirname, 'routes')).forEach(r => {
   route(app); // Initialize route
 });
 
-// Start application
-app.listen(process.env.NODE_PORT, () => {
-  console.log(`App running on port ${process.env.NODE_PORT}`);
-});
+setTimeout(() => {
+  // Start application
+  app.listen(process.env.NODE_PORT, () => {
+    console.log(`App running on port ${process.env.NODE_PORT}`);
+  });
+}, 5000);
+
