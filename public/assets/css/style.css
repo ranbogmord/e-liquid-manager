@@ -97,6 +97,8 @@ header#main-header {
       outline: 0;
       font-family: 'Poiret One', cursive;
       font-size: 40px; }
+      #mix-area .name-row input.error {
+        border-color: #f00; }
   #mix-area .mix-containers {
     display: flex;
     flex-direction: row;

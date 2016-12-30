@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const flavourSchema = new Schema({
   name: { type: String, required: true },
-  basePercent: { type: String, required: true },
+  basePercent: { type: Number, default: 0 },
   isVg: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
