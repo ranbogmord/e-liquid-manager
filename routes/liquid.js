@@ -1,4 +1,6 @@
 const models = require('../models');
+const statistics = require('../lib/statistics');
+const async = require('async');
 
 module.exports = app => {
   app.io.route('liquid', {
@@ -45,6 +47,32 @@ module.exports = app => {
           });
         }
 
+        statistics.calculateFlavourAverage((err, results) => {
+          if (err) return false;
+
+          async.each(results, (item, callback) => {
+            models.Flavour.findOne({
+              _id: item._id
+            }, (err, flavour) => {
+              if (err) return callback(err);
+              if (!flavour) return;
+
+              flavour.basePercent = Math.round(item.value.avg * 100) / 100 || 0;
+
+              flavour.save(err => {
+                if (err) return callback(err);
+
+                req.io.emit('flavour:updated', flavour);
+                return callback(null);
+              });
+            });
+          }, err => {
+            if (err) {
+              console.error(new Error(err));
+            }
+          });
+        });
+
         models.Liquid.populate(liquid, {
           path: 'flavours.flavour'
         }, (err, liquid) => {
@@ -79,7 +107,7 @@ module.exports = app => {
             vgPercent: (data.target || {}).vgPercent,
             nicStrength: (data.target || {}).nicStrength
           },
-          flavours: (data.flavours || []).filter(f => { return !!f }).map(f => {
+          flavours: (data.flavours || []).filter(f => { return !!f && f.perc > 0; }).map(f => {
             if (typeof f.flavour == 'object') {
               f.flavour = f.flavour._id
             }
@@ -94,6 +122,30 @@ module.exports = app => {
               error: err
             });
           }
+
+          statistics.calculateFlavourAverage((err, results) => {
+            if (err) return false;
+
+            async.each(results, (item, callback) => {
+              models.Flavour.findOne({
+                _id: item._id
+              }, (err, flavour) => {
+                if (err) return callback(err);
+                if (!flavour) return;
+
+                flavour.basePercent = (Math.round(item.value.avg * 100) / 100) || 0;
+
+                flavour.save(err => {
+                  if (err) return callback(err);
+
+                  req.io.emit('flavour:updated', flavour);
+                  return callback(null);
+                });
+              });
+            }, err => {
+              if (err) console.error(new Error(err));
+            });
+          });
 
           models.Liquid.populate(liquid, {
             path: 'flavours.flavour'
