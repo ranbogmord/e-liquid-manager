@@ -203,14 +203,18 @@
       saveLiquid: function () {
         var self = this;
 
+<<<<<<< Updated upstream
         const liquid = JSON.parse(JSON.stringify(this.currentLiquid));
         console.log("pre", liquid);
+=======
+        var liquid = JSON.parse(JSON.stringify(this.currentLiquid));
+>>>>>>> Stashed changes
 
         if (!liquid.name) {
           return;
         }
 
-        let data = {
+        var data = {
           name: liquid.name,
           base: {
             nicStrength: liquid.base.nicStrength
@@ -222,7 +226,7 @@
           },
           flavours: liquid.flavours
         };
-        let action = "liquid:create";
+        var action = "liquid:create";
 
         if (liquid._id) {
           data._id = liquid._id;
