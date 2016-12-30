@@ -101,6 +101,18 @@
         self.rawData.splice(self.rawData.indexOf(item), 1);
       });
 
+      IOConnection.on('flavour:updated', function (data) {
+        var item = self.rawData.filter(function (d) {
+          return d._id === data._id;
+        }).pop();
+
+        if (!item) {
+          return;
+        }
+
+        self.rawData.splice(self.rawData.indexOf(item), 1, data);
+      });
+
       IOConnection.emit('flavour:list', function (data) {
         if (data.error) {
           console.warn(data.error);
@@ -178,13 +190,16 @@
       },
       createFlavour: function () {
         var self = this;
-        if (!this.newFlavour.name || !this.newFlavour.basePercent) {
+        if (!this.newFlavour.name) {
+          alert('Name is required');
+          this.newFlavour.nameError = true;
           return;
+        } else {
+          this.newFlavour.nameError = false;
         }
 
         IOConnection.emit('flavour:create', {
           name: this.newFlavour.name,
-          basePercent: this.newFlavour.basePercent,
           isVg: this.newFlavour.isVg
         }, function (res) {
           if (res.error) {
@@ -204,10 +219,13 @@
         var self = this;
 
         const liquid = JSON.parse(JSON.stringify(this.currentLiquid));
-        console.log("pre", liquid);
 
         if (!liquid.name) {
+          alert('Liquid name is required');
+          self.currentLiquid.nameError = true;
           return;
+        } else {
+          self.currentLiquid.nameError = false;
         }
 
         let data = {
@@ -230,7 +248,6 @@
         }
 
         IOConnection.emit(action, data, function (res) {
-          console.log("response", res);
           if (res.error) {
             if (typeof res.error == 'object') {
               alert('Failed to save e-liquid');
@@ -249,7 +266,7 @@
         this.showNewFlavourForm = false;
         this.newFlavour = {
           name: '',
-          basePercent: 0,
+          nameError: false,
           isVg: false
         };
       },
@@ -257,12 +274,14 @@
         this.setCurrentLiquid({
           _id: null,
           name: '',
+          nameError: false,
           base: {
             nicStrength: 30
           },
           target: {
             pgPercent: 30,
-            vgPercent: 70
+            vgPercent: 70,
+            nicStrength: 0
           },
           flavours: [],
           comments: []

@@ -36,7 +36,7 @@
 
         <main id="mix-area">
             <div class="name-row">
-                <input type="text" v-model="currentLiquid.name" placeholder="e-liquid name">
+                <input type="text" v-model="currentLiquid.name" :class="{error: currentLiquid.nameError}" placeholder="e-liquid name">
             </div>
             <div class="mix-containers">
                 <div class="mix-container" id="base-container">
@@ -138,12 +138,6 @@
                     <label>
                         Name: <br>
                         <input type="text" v-model="newFlavour.name">
-                    </label>
-                </div>
-                <div class="form-field">
-                    <label>
-                        Recommended percentage: <br>
-                        <input type="number" v-model="newFlavour.basePercent">
                     </label>
                 </div>
                 <div class="form-field">
