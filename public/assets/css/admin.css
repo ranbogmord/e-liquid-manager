@@ -12,42 +12,6 @@ body {
 h1, h2, h3, h4 {
   font-family: 'Slabo 27px', serif; }
 
-button,
-input[type='submit'] {
-  outline: 0;
-  border-radius: 4px;
-  background: #fefefe;
-  color: #2c3e50;
-  border: 1px solid #fefefe;
-  padding: 10px;
-  cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease; }
-  button:hover,
-  input[type='submit']:hover {
-    color: #fefefe;
-    background: #2c3e50; }
-  button.expand,
-  input[type='submit'].expand {
-    width: 100%; }
-  button.primary,
-  input[type='submit'].primary {
-    background: #2ecc71;
-    color: #fefefe;
-    border: 1px solid #2ecc71; }
-    button.primary:hover,
-    input[type='submit'].primary:hover {
-      color: #2ecc71;
-      background: transparent; }
-  button.warning,
-  input[type='submit'].warning {
-    color: #fefefe;
-    background: #e74c3c;
-    border: 1px solid #e74c3c; }
-    button.warning:hover,
-    input[type='submit'].warning:hover {
-      background-color: transparent;
-      color: #e74c3c; }
-
 .form-field {
   width: 100%;
   margin-bottom: 20px; }
@@ -111,10 +75,68 @@ header#main-header {
           color: #2c3e50;
           background: #fefefe; }
 
-#user-form {
-  width: 400px;
-  max-width: 90%;
-  margin: 0 auto;
-  padding: 20px; }
+body {
+  min-height: 100vh; }
 
-/*# sourceMappingURL=user.css.map */
+.admin-page {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 40px; }
+  .admin-page h1 {
+    font-family: "Poiret One", cursive; }
+
+.item-list {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap; }
+  .item-list .item {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%; }
+    .item-list .item .col-100 {
+      flex: 100%; }
+    .item-list .item .col-95 {
+      flex: 95%; }
+    .item-list .item .col-90 {
+      flex: 90%; }
+    .item-list .item .col-85 {
+      flex: 85%; }
+    .item-list .item .col-80 {
+      flex: 80%; }
+    .item-list .item .col-75 {
+      flex: 75%; }
+    .item-list .item .col-70 {
+      flex: 70%; }
+    .item-list .item .col-65 {
+      flex: 65%; }
+    .item-list .item .col-60 {
+      flex: 60%; }
+    .item-list .item .col-55 {
+      flex: 55%; }
+    .item-list .item .col-50 {
+      flex: 50%; }
+    .item-list .item .col-45 {
+      flex: 45%; }
+    .item-list .item .col-40 {
+      flex: 40%; }
+    .item-list .item .col-35 {
+      flex: 35%; }
+    .item-list .item .col-30 {
+      flex: 30%; }
+    .item-list .item .col-25 {
+      flex: 25%; }
+    .item-list .item .col-20 {
+      flex: 20%; }
+    .item-list .item .col-15 {
+      flex: 15%; }
+    .item-list .item .col-10 {
+      flex: 10%; }
+    .item-list .item .col-5 {
+      flex: 5%; }
+    .item-list .item .col-fit {
+      flex: 1; }
+
+/*# sourceMappingURL=admin.css.map */

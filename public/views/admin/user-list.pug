@@ -1,0 +1,11 @@
+extends ../layout_admin.pug
+
+block content
+    h1 Users
+    div.item-list
+        each row in (users || [])
+            .item
+                .col-20
+                    a(href="#")= row.username
+                .col-20
+                    a(href="#")= row.email

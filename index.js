@@ -48,7 +48,21 @@ app.io.set('authorization', passportIO.authorize({
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'public/views'));
 
-app.use(require('morgan')('combined'));
+if (process.env.HTTP_LOG_FILE) {
+  try {
+    const stats = fs.statSync(process.env.HTTP_LOG_FILE);
+  } catch (ex) {
+    fs.writeFileSync(process.env.HTTP_LOG_FILE, '');
+  }
+
+  const stream = fs.createWriteStream(process.env.HTTP_LOG_FILE);
+
+  app.use(require('morgan')(process.env.HTTP_LOG_FORMAT || 'combined', {
+    stream: stream
+  }));
+} else {
+  app.use(require('morgan')('combined'));
+}
 
 // User authentication
 passport.use(new LocalStrategy((username, password, done) => {

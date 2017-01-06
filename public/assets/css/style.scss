@@ -1,20 +1,7 @@
-*, *:after, *:before {
-    box-sizing: border-box;
-}
+@import "base";
+@import "colors";
+@import "buttons";
 
-body {
-    background-color: #fefefe;
-    font-family: 'Open Sans', sans-serif;
-    color: #2c3e50;
-}
-
-.number {
-    font-family: 'Montserrat', sans-serif;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Slabo 27px', serif;
-}
 
 @import "forms";
 
@@ -60,7 +47,7 @@ h1, h2, h3, h4 {
             font-size: 40px;
 
             &.error {
-                border-color: #f00;
+                border-color: $warning;
             }
         }
     }

@@ -1,0 +1,24 @@
+doctype html
+
+html
+    head
+        title Admin - E-Liquid Manager
+        block styles
+            link(rel="stylesheet", href="/vendor/normalize/normalize.css")
+            link(rel="stylesheet", href="/vendor/animate/animate.css")
+            link(href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans|Poiret+One|Slabo+27px", rel="stylesheet")
+            link(href="/css/admin.css", rel="stylesheet")
+    body.theme-dark
+        header#main-header
+            h1#brand E-Liquid Manager - Admin
+
+            ul#menu
+                li
+                    a(href="/admin/users") Users
+                li
+                    a(href="/admin/flavours") Flavours
+                li
+                    a(href="/logout") Logout
+        div.admin-page
+            block content
+        block scripts

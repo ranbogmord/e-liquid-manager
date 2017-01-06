@@ -1,3 +1,5 @@
+@import "colors";
+
 header#main-header {
   height: 60px;
   padding: 0 20px;
@@ -9,12 +11,20 @@ header#main-header {
   flex-wrap: wrap;
   justify-content: flex-start;
 
+  .theme-dark & {
+    background-color: $dark-blue;
+  }
+
   #brand {
     font-size: 24px;
     line-height: 60px;
     margin: 0;
     font-family: 'Poiret One', cursive;
-    color: #2c3e50;
+    color: $dark-blue;
+
+    .theme-dark & {
+      color: $white;
+    }
   }
 
   #menu {
@@ -29,17 +39,27 @@ header#main-header {
 
       a {
         text-decoration: none;
-        color: #2c3e50;
-        background: #fefefe;
+        color: $dark-blue;
+        background: $white;
         transition: background 0.2s ease, color 0.2s ease;
         display: block;
         height: 59px;
         padding: 0 20px;
         line-height: 60px;
 
+        .theme-dark & {
+          color: $white;
+          background: $dark-blue;
+        }
+
         &:hover {
-          color: #fefefe;
-          background: #2c3e50;
+          color: $white;
+          background: $dark-blue;
+
+          .theme-dark & {
+            color: $dark-blue;
+            background: $white;
+          }
         }
       }
     }
