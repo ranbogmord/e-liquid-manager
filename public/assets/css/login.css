@@ -1,11 +1,52 @@
-* {
+*, *:after, *:before {
   box-sizing: border-box; }
+
+body {
+  background-color: #fefefe;
+  font-family: 'Open Sans', sans-serif;
+  color: #2c3e50; }
 
 .number {
   font-family: 'Montserrat', sans-serif; }
 
 h1, h2, h3, h4 {
   font-family: 'Slabo 27px', serif; }
+
+button,
+input[type='submit'] {
+  outline: 0;
+  border-radius: 4px;
+  background: #fefefe;
+  color: #2c3e50;
+  border: 1px solid #fefefe;
+  padding: 10px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease; }
+  button:hover,
+  input[type='submit']:hover {
+    color: #fefefe;
+    background: #2c3e50; }
+  button.expand,
+  input[type='submit'].expand {
+    width: 100%; }
+  button.primary,
+  input[type='submit'].primary {
+    background: #2ecc71;
+    color: #fefefe;
+    border: 1px solid #2ecc71; }
+    button.primary:hover,
+    input[type='submit'].primary:hover {
+      color: #2ecc71;
+      background: transparent; }
+  button.warning,
+  input[type='submit'].warning {
+    color: #fefefe;
+    background: #e74c3c;
+    border: 1px solid #e74c3c; }
+    button.warning:hover,
+    input[type='submit'].warning:hover {
+      background-color: transparent;
+      color: #e74c3c; }
 
 body {
   background-color: #fefefe;

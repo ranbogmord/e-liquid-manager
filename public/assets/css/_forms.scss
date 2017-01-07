@@ -1,3 +1,5 @@
+@import "colors";
+
 .form-field {
   width: 100%;
   margin-bottom: 20px;
@@ -8,7 +10,7 @@
   input[type="password"] {
     width: 100%;
     height: 30px;
-    line-height: 30;
+    line-height: 30px;
     border-radius: 3px;
     border: 1px solid #ccc;
     outline: 0;
@@ -16,4 +18,21 @@
     margin-top: 5px;
     padding-left: 10px;
   }
+
+  select {
+    width: 100%;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    margin-top: 5px;
+    outline: 0;
+    padding-left: 10px;
+  }
+}
+
+.form-error {
+  padding: 0 10px;
+  border: 1px solid $warning;
+  margin-bottom: 20px;
 }

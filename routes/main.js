@@ -1,16 +1,9 @@
 const path = require('path');
 const passport = require('passport');
-
-function isAuthenticated(req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.redirect('/login');
-  }
-
-  next();
-}
+const authorization = require('../lib/authorization');
 
 module.exports = app => {
-  app.get('/', isAuthenticated, (req, res) => {
+  app.get('/', authorization.isAuthenticated, (req, res) => {
     return res.sendfile(path.join(__dirname, '../public/index.html'));
   });
 
@@ -24,13 +17,13 @@ module.exports = app => {
     return res.redirect('/');
   });
 
-  app.get('/logout', isAuthenticated, (req, res) => {
+  app.get('/logout', authorization.isAuthenticated, (req, res) => {
     req.logout();
 
     return res.redirect('/login');
   });
 
-  app.get('/me', isAuthenticated, (req, res) => {
+  app.get('/me', authorization.isAuthenticated, (req, res) => {
     const user = req.user;
 
     return res.render('me/me', {
@@ -38,7 +31,7 @@ module.exports = app => {
     });
   });
 
-  app.post('/me', isAuthenticated, (req, res) => {
+  app.post('/me', authorization.isAuthenticated, (req, res) => {
     const user = req.user;
 
     user.email = req.body.email;

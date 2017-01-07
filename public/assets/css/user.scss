@@ -1,6 +1,5 @@
-*, *:before, *:after {
-  box-sizing: border-box;
-}
+@import "base";
+@import "buttons";
 
 @import "forms";
 @import "header";

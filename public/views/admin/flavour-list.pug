@@ -1,0 +1,24 @@
+extends ../layout_admin.pug
+
+block content
+    h1 Flavours
+    div.item-list
+        .item
+            .col-40
+                span Name
+            .col-20
+                span Added by
+            .col-20
+                span Created
+            .col-20
+                span Last updated
+
+        each row in (flavours || [])
+            .item
+                .col-40
+                    a(href="/admin/flavours/" + row._id)= row.name
+                .col-20
+                    if row.addedBy
+                        a(href="/admin/users/" + row.addedBy._id)= (row.addedBy || {}).username
+                .col-20= row.createdAt
+                .col-20= row.updatedAt
