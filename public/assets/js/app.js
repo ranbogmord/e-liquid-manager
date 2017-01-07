@@ -54,14 +54,38 @@
       });
     },
     computed: {
+      sortedResults: function () {
+        return this.rawData.sort(function (a, b) {
+          a = a.name.toUpperCase();
+          b = b.name.toUpperCase();
+
+          if (a < b) {
+            return -1;
+          } else if (a > b) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      },
       results: function () {
         var self = this;
         if (!self.search) {
-          return self.rawData;
+          return self.sortedResults;
         }
 
-        return self.rawData.filter(function (liquid) {
+        return self.sortedResults.filter(function (liquid) {
           return liquid.name.toLowerCase().indexOf(self.search.toLowerCase()) !== -1;
+        }).sort(function (a, b) {
+          a = a.name.toUpperCase();
+          b = b.name.toUpperCase();
+          if (a < b) {
+            return -1;
+          } else if (a > b) {
+            return 1;
+          } else {
+            return 0;
+          }
         });
       }
     },
@@ -123,13 +147,27 @@
       });
     },
     computed: {
+      sortedResults: function () {
+        return this.rawData.sort(function (a, b) {
+          a = a.name.toUpperCase();
+          b = b.name.toUpperCase();
+
+          if (a < b) {
+            return -1;
+          } else if (a > b) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      },
       results: function () {
         var self = this;
         if (!self.search) {
-          return self.rawData;
+          return self.sortedResults;
         }
 
-        return self.rawData.filter(function (liquid) {
+        return self.sortedResults.filter(function (liquid) {
           return liquid.name.toLowerCase().indexOf(self.search.toLowerCase()) !== -1;
         });
       }
