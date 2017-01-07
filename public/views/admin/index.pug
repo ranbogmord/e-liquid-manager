@@ -1,4 +1,13 @@
 extends ../layout_admin.pug
 
 block content
+    div.block-grid
+        div.block.block-25
+            div.block-number= userCount
+            div.block-text
+                a(href="/admin/users") Users
 
+        div.block.block-25
+            div.block-number= flavourCount
+            div.block-text
+                a(href="/admin/flavours") Flavours

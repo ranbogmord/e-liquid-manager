@@ -25,6 +25,11 @@ header#main-header {
     .theme-dark & {
       color: $white;
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
   #menu {

@@ -1,0 +1,20 @@
+form(method="post", action=form.action)
+    if form.error
+        div.form-error
+            p= form.error
+    div.form-field
+        label(for="username") Username
+        input(type="text", value=user.username, id="username", name="username")
+    div.form-field
+        label(for="email") Email
+        input(type="text", value=user.email, id="email", name="email")
+    div.form-field
+        label(for="password") Password
+        input(type="text", value="", id="password", name="password")
+    div.form-field
+        label(for="role") Role
+        select(name="role", id="role")
+            option(value="user", selected=user.role == "user") User
+            option(value="admin", selected=user.role == "admin") Admin
+    div.form-field
+        input(type="submit", value=form.submitValue).primary

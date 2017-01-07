@@ -1,24 +1,24 @@
 extends ../layout_admin.pug
 
 block content
-    h1 Users
-    a(href="/admin/users/new").new-user-link New user
+    h1 Flavours
     div.item-list
         .item
             .col-40
-                span Username
+                span Name
             .col-20
-                span Email
+                span Added by
             .col-20
                 span Created
             .col-20
                 span Last updated
 
-        each row in (users || [])
+        each row in (flavours || [])
             .item
                 .col-40
-                    a(href="/admin/users/" + row._id)= row.username
+                    a(href="/admin/flavours/" + row._id)= row.name
                 .col-20
-                    a(href="/admin/users/" + row._id)= row.email
+                    if row.addedBy
+                        a(href="/admin/users/" + row.addedBy._id)= (row.addedBy || {}).username
                 .col-20= row.createdAt
                 .col-20= row.updatedAt

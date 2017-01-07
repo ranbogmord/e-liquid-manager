@@ -57,13 +57,27 @@ input[type='submit'] {
   .form-field input[type="password"] {
     width: 100%;
     height: 30px;
-    line-height: 30;
+    line-height: 30px;
     border-radius: 3px;
     border: 1px solid #ccc;
     outline: 0;
     box-shadow: none;
     margin-top: 5px;
     padding-left: 10px; }
+  .form-field select {
+    width: 100%;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    margin-top: 5px;
+    outline: 0;
+    padding-left: 10px; }
+
+.form-error {
+  padding: 0 10px;
+  border: 1px solid #e74c3c;
+  margin-bottom: 20px; }
 
 #e-liquid-app {
   display: flex;
@@ -90,6 +104,9 @@ header#main-header {
     color: #2c3e50; }
     .theme-dark header#main-header #brand {
       color: #fefefe; }
+    header#main-header #brand a {
+      color: inherit;
+      text-decoration: none; }
   header#main-header #menu {
     margin: 0 0 0 auto;
     list-style-type: none;

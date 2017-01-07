@@ -1,0 +1,9 @@
+form(method="post", action=form.action)
+    if form.error
+        div.form-error
+            p= form.error
+    div.form-field
+        label(for="name") Name
+        input(type="text", value=flavour.name, id="name", name="name")
+    div.form-field
+        input(type="submit", value=form.submitValue).primary
