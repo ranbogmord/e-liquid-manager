@@ -62,9 +62,15 @@ body {
 
   .block {
     padding: 20px;
-    box-shadow: 0 0 3px -1px rgba(0,0,0,0.5);
-    margin: 0 20px;
-    text-align: center;
+    display: flex;
+    align-items: stretch;
+
+    .block-content {
+      padding: 20px;
+      width: 100%;
+      box-shadow: 0 0 3px -1px rgba(0,0,0,0.5);
+      text-align: center;
+    }
 
     .block-number {
       font-size: 80px;
