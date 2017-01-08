@@ -2,6 +2,7 @@ const path = require('path');
 const passport = require('passport');
 const authorization = require('../lib/authorization');
 const models = require('../models');
+const statistics = require('../lib/statistics');
 
 const validateUserBody = (params) => {
   return (req, res, next) => {
@@ -210,5 +211,13 @@ module.exports = app => {
 
       return res.redirect('/admin/flavours');
     });
+  });
+
+  app.get('/admin/statistics/popular-flavours', authorization.isAdmin, (req, res) => {
+    statistics.getMostPopularFlavours((err, result) => {
+      if (err) return res.status(500).end();
+
+      return res.json(result.slice(0, 9));
+    })
   });
 };
