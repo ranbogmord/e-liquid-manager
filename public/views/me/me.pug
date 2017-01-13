@@ -7,6 +7,8 @@ block content
     header#main-header
         h1#brand E-Liquid Manager
 
+        a(href="#")#mobile-menu-toggle
+            span menu
         ul#menu
             li
                 a(href="/") Mixing
@@ -23,3 +25,5 @@ block content
                     input(type="password", name="password", placeholder="password", value="")
             div.actions-row
                 input(type="submit", value="Save").button.primary
+block append scripts
+    script(src="/js/mobile-menu.js")
