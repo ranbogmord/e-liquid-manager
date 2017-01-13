@@ -107,7 +107,8 @@ header#main-header {
         width: 100%;
         display: block;
         transition-duration: 0.3s;
-        transition-property: top, bottom, transform; }
+        transition-property: top, bottom, transform;
+        transition-delay: 0.3s, 0.3s, 0.3s; }
       header#main-header #mobile-menu-toggle span:before {
         top: -6px; }
       header#main-header #mobile-menu-toggle span:after {
@@ -116,6 +117,8 @@ header#main-header {
       background: #e74c3c; }
       header#main-header #mobile-menu-toggle.open span {
         background: none; }
+        header#main-header #mobile-menu-toggle.open span:before, header#main-header #mobile-menu-toggle.open span:after {
+          transition-delay: 0.3s, 0.3s, 0.3s; }
         header#main-header #mobile-menu-toggle.open span:before {
           top: 0;
           transform: rotate(-45deg); }
