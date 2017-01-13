@@ -424,4 +424,56 @@
       'round': roundingFilter
     }
   });
-}();
+
+
+  $('body').swipe({
+    swipeLeft: function (event, direction, distance, duration, fingerCount) {
+      // Only swipe for mobile
+      if (window.innerWidth > 768) {
+        return false;
+      }
+
+      // Close mobile menu
+      $('#mobile-menu-toggle').removeClass('open');
+
+      var flavourList = $('#flavour-list');
+      var liquidList = $('#liquid-list');
+      if (flavourList.hasClass('open')) {
+        // Do nothing if menu is already open
+        return false;
+      } else if (liquidList.hasClass('open')) {
+        // Close the liquid list instead if it's open
+        liquidList.removeClass('open');
+      } else {
+        // Open list
+        flavourList.addClass('open');
+      }
+    },
+    swipeRight: function (event, direction, distance, duration, fingerCount) {
+      // Only swipe for mobile
+      if (window.innerWidth > 768) {
+        return false;
+      }
+
+      // Close mobile menu
+      $('#mobile-menu-toggle').removeClass('open');
+
+      var flavourList = $('#flavour-list');
+      var liquidList = $('#liquid-list');
+      if (liquidList.hasClass('open')) {
+        // Do nothing if menu is open
+        return false;
+      } else if (flavourList.hasClass('open')) {
+        // Close flavour list instead if it's open
+        flavourList.removeClass('open');
+      } else {
+        // open list
+        liquidList.addClass('open');
+      }
+    }
+  });
+
+  $(document).on('click', '#liquid-list .searchable-list--search-result', function (e) {
+    $('#liquid-list').removeClass('open');
+  });
+}(jQuery);

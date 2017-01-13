@@ -12,6 +12,14 @@ body {
 h1, h2, h3, h4 {
   font-family: 'Slabo 27px', serif; }
 
+@media (max-width: 1023px) {
+  .hide-tablet-landscape {
+    display: none; } }
+
+@media (max-width: 500px) {
+  .hide-phone {
+    display: none; } }
+
 button,
 input[type='submit'] {
   outline: 0;

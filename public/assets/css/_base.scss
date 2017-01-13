@@ -1,4 +1,6 @@
 @import "colors";
+@import "media-queries";
+
 *, *:after, *:before {
   box-sizing: border-box;
 }
@@ -15,4 +17,16 @@ body {
 
 h1, h2, h3, h4 {
   font-family: 'Slabo 27px', serif;
+}
+
+.hide-tablet-landscape {
+  @media #{$breakpoint-tablet-landscape} {
+    display: none;
+  }
+}
+
+.hide-phone {
+  @media #{$breakpoint-phone} {
+    display: none;
+  }
 }
