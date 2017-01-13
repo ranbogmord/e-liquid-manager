@@ -1,13 +1,27 @@
 extends ../layout_admin.pug
 
+block append styles
+    link(href="/vendor/c3/c3.min.css", rel="stylesheet")
+
 block content
     div.block-grid
         div.block.block-25
-            div.block-number= userCount
-            div.block-text
-                a(href="/admin/users") Users
+            div.block-content
+                div.block-number= userCount
+                div.block-text
+                    a(href="/admin/users") Users
 
         div.block.block-25
-            div.block-number= flavourCount
-            div.block-text
-                a(href="/admin/flavours") Flavours
+            div.block-content
+                div.block-number= flavourCount
+                div.block-text
+                    a(href="/admin/flavours") Flavours
+        div.block.block-50
+            div.block-content
+                div#flavour-stats
+
+block append scripts
+    script(src="/vendor/jquery/jquery.min.js")
+    script(src="/vendor/c3/d3.min.js")
+    script(src="/vendor/c3/c3.min.js")
+    script(src="/js/admin.js")
