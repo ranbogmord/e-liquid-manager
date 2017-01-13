@@ -425,14 +425,8 @@
     }
   });
 
-
   $('body').swipe({
     swipeLeft: function (event, direction, distance, duration, fingerCount) {
-      // Only swipe for mobile
-      if (window.innerWidth > 768) {
-        return false;
-      }
-
       // Close mobile menu
       $('#mobile-menu-toggle').removeClass('open');
 
@@ -440,7 +434,7 @@
       var liquidList = $('#liquid-list');
       if (flavourList.hasClass('open')) {
         // Do nothing if menu is already open
-        return false;
+        // return false;
       } else if (liquidList.hasClass('open')) {
         // Close the liquid list instead if it's open
         liquidList.removeClass('open');
@@ -450,11 +444,6 @@
       }
     },
     swipeRight: function (event, direction, distance, duration, fingerCount) {
-      // Only swipe for mobile
-      if (window.innerWidth > 768) {
-        return false;
-      }
-
       // Close mobile menu
       $('#mobile-menu-toggle').removeClass('open');
 
@@ -462,7 +451,7 @@
       var liquidList = $('#liquid-list');
       if (liquidList.hasClass('open')) {
         // Do nothing if menu is open
-        return false;
+        // return false;
       } else if (flavourList.hasClass('open')) {
         // Close flavour list instead if it's open
         flavourList.removeClass('open');
@@ -472,6 +461,17 @@
       }
     }
   });
+
+  var checkSwipe = function () {
+    if (window.innerWidth > 768) {
+      $('body').swipe('disable');
+    } else {
+      $('body').swipe('enable');
+    }
+  };
+  checkSwipe();
+
+  $(window).on('resize', checkSwipe);
 
   $(document).on('click', '#liquid-list .searchable-list--search-result', function (e) {
     $('#liquid-list').removeClass('open');
