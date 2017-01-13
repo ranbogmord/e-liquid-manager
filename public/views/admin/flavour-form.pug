@@ -6,4 +6,10 @@ form(method="post", action=form.action)
         label(for="name") Name
         input(type="text", value=flavour.name, id="name", name="name")
     div.form-field
+        label(for="addedBy") Added by
+        select(name="addedBy")#addedBy
+            option(value="") Unknown
+            each user in (form.users || [])
+                option(value=user._id, selected=user.selected)= user.username
+    div.form-field
         input(type="submit", value=form.submitValue).primary

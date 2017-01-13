@@ -32,15 +32,26 @@ const validateFlavourBody = (params) => {
     const body = req.body;
 
     if (!params.validate || !params.validate(body)) {
-      return res.render(params.template, {
-        form: {
-          action: req.originalUrl,
-          submitValue: params.submitValue,
-          error: params.error
-        },
-        flavour: {
-          name: body.name
-        }
+      models.User.find({}, null, {sort: 'username'}).exec((err, users) => {
+        if (err) users = [];
+
+        users = users.map((user) => {
+          user = user.toJSON();
+          user.selected = user._id.toString() == req.requestedFlavour.addedBy;
+          return user;
+        });
+
+        return res.render(params.template, {
+          form: {
+            action: req.originalUrl,
+            submitValue: params.submitValue,
+            error: params.error,
+            users: users
+          },
+          flavour: {
+            name: body.name
+          }
+        });
       });
     }
 
@@ -167,22 +178,33 @@ module.exports = app => {
   });
 
   app.get('/admin/flavours', authorization.isAdmin, (req, res) => {
-    models.Flavour.find({}, null, {sort: 'name'}, (err, flavours) => {
+    models.Flavour.find({}, null, {sort: 'name'}).populate('addedBy').exec((err, flavours) => {
       if (err) return res.status(500).send('Internal server error');
 
       return res.render('admin/flavour-list', {
         flavours: flavours
       })
-    })
+    });
   });
 
   app.get('/admin/flavours/:fid', authorization.isAdmin, (req, res) => {
-    return res.render('admin/edit-flavour', {
-      form: {
-        action: req.originalUrl,
-        submitValue: 'Save'
-      },
-      flavour: req.requestedFlavour
+    models.User.find({}, null, {sort: 'username'}).exec((err, users) => {
+      if (err) users = [];
+
+      users = users.map((user) => {
+        user = user.toJSON();
+        user.selected = user._id.toString() == req.requestedFlavour.addedBy;
+        return user;
+      });
+
+      return res.render('admin/edit-flavour', {
+        form: {
+          action: req.originalUrl,
+          submitValue: 'Save',
+          users: users
+        },
+        flavour: req.requestedFlavour
+      });
     });
   });
 
@@ -197,6 +219,7 @@ module.exports = app => {
     const body = req.body;
 
     req.requestedFlavour.name = body.name;
+    req.requestedFlavour.addedBy = body.addedBy;
 
     req.requestedFlavour.save((err) => {
       if (err) return res.status(500).send('Internal server error');
