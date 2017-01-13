@@ -3,6 +3,7 @@ doctype html
 html
     head
         title Admin - E-Liquid Manager
+        meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
         block styles
             link(rel="stylesheet", href="/vendor/normalize/normalize.css")
             link(rel="stylesheet", href="/vendor/animate/animate.css")
@@ -13,6 +14,8 @@ html
             h1#brand
                 a(href="/admin") E-Liquid Manager - Admin
 
+            a(href="#")#mobile-menu-toggle
+                span menu
             ul#menu
                 li
                     a(href="/admin/users") Users
@@ -25,3 +28,5 @@ html
         div.admin-page
             block content
         block scripts
+            script(src="/vendor/jquery/jquery.js")
+            script(src="/js/mobile-menu.js")

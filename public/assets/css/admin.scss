@@ -1,11 +1,19 @@
 @import "base";
-
+@import "media-queries";
 @import "forms";
 @import "header";
 @import "buttons";
 
 body {
   min-height: 100vh;
+}
+
+header#main-header {
+  #brand {
+    @media #{$breakpoint-phone} {
+      font-size: 18px;
+    }
+  }
 }
 
 .admin-page {
@@ -42,6 +50,7 @@ body {
     $i: 100;
     @while $i > 0 {
       .col-#{$i} {
+        padding: 10px;
         flex: $i + 0%;
       }
 
@@ -50,6 +59,7 @@ body {
 
     .col-fit {
       flex: 1;
+      padding: 10px;
     }
   }
 }
@@ -91,14 +101,30 @@ body {
 
     &.block-25 {
       width: 25%;
+      
+      @media #{$breakpoint-tablet} {
+        width: 50%;
+      }
+      
+      @media #{$breakpoint-phone} {
+        width: 100%;
+      }
     }
 
     &.block-50 {
       width: 50%;
+
+      @media #{$breakpoint-tablet} {
+        width: 100%;
+      }
     }
 
     &.block-75 {
       width: 75%;
+
+      @media #{$breakpoint-tablet} {
+        width: 100%;
+      }
     }
 
     &.block-fit {

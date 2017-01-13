@@ -7,18 +7,18 @@ block content
         .item
             .col-40
                 span Username
-            .col-20
+            .col-20.hide-phone
                 span Email
-            .col-20
+            .col-20.hide-tablet-landscape
                 span Created
-            .col-20
+            .col-20.hide-tablet-landscape
                 span Last updated
 
         each row in (users || [])
             .item
                 .col-40
                     a(href="/admin/users/" + row._id)= row.username
-                .col-20
+                .col-20.hide-phone
                     a(href="/admin/users/" + row._id)= row.email
-                .col-20= row.createdAt
-                .col-20= row.updatedAt
+                .col-20.hide-tablet-landscape= row.createdAt
+                .col-20.hide-tablet-landscape= row.updatedAt

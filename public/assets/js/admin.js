@@ -22,6 +22,9 @@
         x: {
           type: 'category'
         }
+      },
+      legend: {
+        position: 'inset'
       }
     });
   });
