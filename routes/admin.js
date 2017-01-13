@@ -154,7 +154,7 @@ module.exports = app => {
     req.requestedUser.save((err) => {
       if (err) return res.status(500).send('Internal server error');
 
-      return res.redirect(req.originalUrl);
+      return res.redirect('/admin/users');
     })
   });
 
@@ -201,7 +201,7 @@ module.exports = app => {
     req.requestedFlavour.save((err) => {
       if (err) return res.status(500).send('Internal server error');
 
-      return res.redirect(req.originalUrl);
+      return res.redirect('/admin/flavours');
     });
   });
 
