@@ -1,0 +1,29 @@
+extends ../layout.pug
+
+block append styles
+    link(href="/css/share.css", rel="stylesheet")
+
+block content
+    header#main-header
+        h1#brand E-Liquid Manager
+
+        if user
+            a(href="#")#mobile-menu-toggle
+                span menu
+            ul#menu
+                li
+                    a(href="/") Mixing
+                li
+                    a(href="/logout") Logout
+
+    main#share-app
+        div.flavours
+            each flav in liquid.flavours
+                div.flavour
+                    div.name= flav.flavour
+                    div.perc= flav.perc
+                    div.test= flav
+                script.
+                    console.log(!{JSON.stringify(flav)})
+        script.
+            console.log(!{ JSON.stringify(liquid)})
