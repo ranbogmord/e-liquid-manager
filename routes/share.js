@@ -1,6 +1,7 @@
 const authorization = require('../lib/authorization');
 const models = require('../models');
 const moment = require('moment');
+const async = require('async');
 
 module.exports = app => {
   app.param('lid', (req, res, next, id) => {
@@ -70,6 +71,41 @@ module.exports = app => {
       params.user = req.user;
     }
 
-    return res.render('share/index', params);
+    async.map(params.liquid.flavours, (flavourRow, callback) => {
+      models.Flavour.findById(flavourRow.flavour, (err, flavour) => {
+        flavourRow.flavour = flavour;
+
+        callback(null, flavourRow);
+      });
+    }, (err, flavours) => {
+      params.liquid.flavours = flavours;
+
+      if (params.liquid.author) {
+        models.User.findById(params.liquid.author, (err, user) => {
+          params.liquid.author = user;
+
+          return res.render('share/index', params);
+        });
+      } else {
+        return res.render('share/index', params);
+      }
+    });
+  });
+
+  app.post('/share/:slid/save', authorization.isAuthenticated, (req, res) => {
+    let liq = req.shareLink.liquid;
+    liq.author = req.user;
+    delete liq._id;
+    delete liq.updatedAt;
+    delete liq.createdAt;
+    delete liq.__v;
+
+    liq.save(err => {
+      if (err) return res.status(500).json({
+        error: "Failed to save liquid"
+      });
+
+      return res.json(liq);
+    });
   });
 };

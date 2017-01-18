@@ -134,4 +134,56 @@ header#main-header {
     visibility: visible;
     opacity: 1; }
 
+button,
+input[type='submit'] {
+  outline: 0;
+  border-radius: 4px;
+  background: #fefefe;
+  color: #2c3e50;
+  border: 1px solid #fefefe;
+  padding: 10px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease; }
+  button:hover,
+  input[type='submit']:hover {
+    color: #fefefe;
+    background: #2c3e50; }
+  button.expand,
+  input[type='submit'].expand {
+    width: 100%; }
+  button.primary,
+  input[type='submit'].primary {
+    background: #2ecc71;
+    color: #fefefe;
+    border: 1px solid #2ecc71; }
+    button.primary:hover,
+    input[type='submit'].primary:hover {
+      color: #2ecc71;
+      background: transparent; }
+  button.warning,
+  input[type='submit'].warning {
+    color: #fefefe;
+    background: #e74c3c;
+    border: 1px solid #e74c3c; }
+    button.warning:hover,
+    input[type='submit'].warning:hover {
+      background-color: transparent;
+      color: #e74c3c; }
+
+#share-app {
+  width: 600px;
+  max-width: 90%;
+  margin: 0 auto; }
+  #share-app h1 {
+    margin-bottom: 5px; }
+  #share-app table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse; }
+    #share-app table th, #share-app table td {
+      text-align: left;
+      padding: 10px; }
+    #share-app table tr {
+      border-bottom: 1px solid #ccc; }
+
 /*# sourceMappingURL=share.css.map */

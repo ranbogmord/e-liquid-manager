@@ -17,13 +17,24 @@ block content
                     a(href="/logout") Logout
 
     main#share-app
+        h1= liquid.name
+        if (liquid.author || {}).username
+            small By #{liquid.author.username}
         div.flavours
-            each flav in liquid.flavours
-                div.flavour
-                    div.name= flav.flavour
-                    div.perc= flav.perc
-                    div.test= flav
-                script.
-                    console.log(!{JSON.stringify(flav)})
+            table
+                tr
+                    th Flavour
+                    th %
+                each flavourRow in liquid.flavours
+                    tr.flavour
+                        td.name= flavourRow.flavour.name
+                        td.perc= flavourRow.perc
+
+        if user && user._id.toString() !== liquid.author._id.toString()
+            div.save-to-user
+                button#save-liquid.primary Save to my liquids
         script.
             console.log(!{ JSON.stringify(liquid)})
+
+block append scripts
+    script(src="/js/dist/share.js")
