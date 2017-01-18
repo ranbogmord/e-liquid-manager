@@ -16,6 +16,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const passportIO = require('passport.socketio');
 
+mongoose.Promise = require('promise');
 // Connect to mongo
 mongoose.connect(process.env.MONGODB_URL);
 
