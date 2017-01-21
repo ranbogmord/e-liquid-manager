@@ -4,7 +4,7 @@ const authorization = require('../lib/authorization');
 
 module.exports = app => {
   app.get('/', authorization.isAuthenticated, (req, res) => {
-    return res.sendfile(path.join(__dirname, '../public/index.html'));
+    return res.render('app/index');
   });
 
   app.get('/login', (req, res) => {
