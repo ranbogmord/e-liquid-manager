@@ -8,7 +8,7 @@ const gulp = require('gulp'),
 
 gulp.task('js', () => {
   let srcFiles = [
-    'public/assets/src/share.js'
+    'public/src/app.js'
   ];
 
   return es.merge.apply(null, srcFiles.map(file => {
@@ -21,7 +21,7 @@ gulp.task('js', () => {
 });
 
 gulp.task('watch', () => {
-  gulp.watch('public/assets/src/**/*.js', ['js']);
+  gulp.watch('public/src/**/*.js', ['js']);
 });
 
 gulp.task('default', ['js', 'watch']);
