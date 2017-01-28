@@ -878,176 +878,184 @@ var IOConnection = require('./lib/ioconnection');
     return parseInt(val * rounder, 10) / rounder;
   });
 
-  var eLiquidApp = new Vue({
-    el: '#e-liquid-app',
-    data: {
-      mode: 'edit',
-      currentLiquid: {},
-      showNewFlavourForm: false,
-      newFlavour: {
-        name: '',
-        basePercent: 0,
-        isVg: false
-      }
-    },
-    watch: {
-      'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
-        this.currentLiquid.target.vgPercent = 100 - this.currentLiquid.getTargetPgPercent();
-      },
-      'currentLiquid.target.vgPercent': function currentLiquidTargetVgPercent() {
-        this.currentLiquid.target.pgPercent = 100 - this.currentLiquid.getTargetVgPercent();
-      },
-      'currentLiquid.target.batchSize': function currentLiquidTargetBatchSize() {
-        localStorage.setItem('preferred-batch-size', this.currentLiquid.getBatchSize());
-      },
-      'currentLiquid.target.nicStrength': function currentLiquidTargetNicStrength() {
-        localStorage.setItem('preferred-nic-strength', this.currentLiquid.getTargetNicStrength());
-      }
-    },
-    methods: {
-      setCurrentLiquid: function setCurrentLiquid(data) {
-        this.currentLiquid = new Liquid(data || {});
-      },
-      createFlavour: function createFlavour() {
-        this.newFlavour.save().then(function () {
-          self.resetFlavourForm();
-        }).catch(function (err) {
-          alert(err.message);
-          console.log(err);
-        });
-      },
-      saveLiquid: function saveLiquid() {
-        var _this = this;
+  var startApp = function startApp() {
+    console.log('Booting app');
 
-        this.currentLiquid.save().then(function () {
-          _this.resetLiquidForm();
-        }).catch(function (err) {
-          alert(err.message);
-          console.log(err);
-        });
+    var eLiquidApp = new Vue({
+      el: '#e-liquid-app',
+      data: {
+        mode: 'edit',
+        currentLiquid: {},
+        showNewFlavourForm: false,
+        newFlavour: new Flavour({
+          name: '',
+          basePercent: 0,
+          isVg: false
+        })
       },
-      resetFlavourForm: function resetFlavourForm() {
-        this.showNewFlavourForm = false;
-        this.newFlavour = new Flavour();
+      watch: {
+        'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
+          this.currentLiquid.target.vgPercent = 100 - this.currentLiquid.getTargetPgPercent();
+        },
+        'currentLiquid.target.vgPercent': function currentLiquidTargetVgPercent() {
+          this.currentLiquid.target.pgPercent = 100 - this.currentLiquid.getTargetVgPercent();
+        },
+        'currentLiquid.target.batchSize': function currentLiquidTargetBatchSize() {
+          localStorage.setItem('preferred-batch-size', this.currentLiquid.getBatchSize());
+        },
+        'currentLiquid.target.nicStrength': function currentLiquidTargetNicStrength() {
+          localStorage.setItem('preferred-nic-strength', this.currentLiquid.getTargetNicStrength());
+        }
       },
-      resetLiquidForm: function resetLiquidForm() {
-        this.setCurrentLiquid({
-          target: {
-            batchSize: localStorage.getItem('preferred-batch-size'),
-            nicStrength: localStorage.getItem('preferred-nic-strength')
-          }
-        });
-      },
-      addFlavour: function addFlavour(flavour) {
-        this.currentLiquid.flavours.push({
-          flavour: flavour,
-          perc: flavour.basePercent
-        });
-      }
-    },
-    created: function created() {
-      this.resetLiquidForm();
-    },
-    computed: {
-      flavourPgVol: function flavourPgVol() {
-        return this.currentLiquid.getPgFlavourVol();
-      },
-      flavourVgVol: function flavourVgVol() {
-        return this.currentLiquid.getVgFlavourVol();
-      },
+      methods: {
+        setCurrentLiquid: function setCurrentLiquid(data) {
+          this.currentLiquid = new Liquid(data || {});
+        },
+        createFlavour: function createFlavour() {
+          var _this = this;
 
-      pgNicVol: function pgNicVol() {
-        return this.currentLiquid.getPgNicVol();
-      },
-      pgZeroVol: function pgZeroVol() {
-        return this.currentLiquid.getPgZeroVol();
-      },
-      vgVol: function vgVol() {
-        return this.currentLiquid.getVgVol();
-      },
-      mixingTableRows: function mixingTableRows() {
-        var self = this;
-        var rows = [{
-          name: 'Base nicotine',
-          ml: self.pgNicVol,
-          perc: self.pgNicVol / self.currentLiquid.target.batchSize * 100
-        }, {
-          name: 'PG (0 mg/ml)',
-          ml: self.pgZeroVol,
-          perc: self.pgZeroVol / self.currentLiquid.target.batchSize * 100
-        }, {
-          name: 'VG (0 mg/ml)',
-          ml: self.vgVol,
-          perc: self.vgVol / self.currentLiquid.target.batchSize * 100
-        }];
-
-        self.currentLiquid.flavours.forEach(function (f) {
-          rows.push({
-            name: f.flavour.name,
-            perc: f.perc,
-            ml: f.perc / 100 * self.currentLiquid.target.batchSize
+          this.newFlavour.save().then(function () {
+            _this.resetFlavourForm();
+          }).catch(function (err) {
+            alert(err.message);
+            console.log(err);
           });
-        });
+        },
+        saveLiquid: function saveLiquid() {
+          var _this2 = this;
 
-        return rows;
+          this.currentLiquid.save().then(function () {
+            _this2.resetLiquidForm();
+          }).catch(function (err) {
+            alert(err.message);
+            console.log(err);
+          });
+        },
+        resetFlavourForm: function resetFlavourForm() {
+          this.showNewFlavourForm = false;
+          this.newFlavour = new Flavour();
+        },
+        resetLiquidForm: function resetLiquidForm() {
+          this.setCurrentLiquid({
+            target: {
+              batchSize: localStorage.getItem('preferred-batch-size'),
+              nicStrength: localStorage.getItem('preferred-nic-strength')
+            }
+          });
+        },
+        addFlavour: function addFlavour(flavour) {
+          this.currentLiquid.flavours.push({
+            flavour: flavour,
+            perc: flavour.basePercent
+          });
+        }
       },
-      mixingTableTotals: function mixingTableTotals() {
-        var totalMl = 0;
-        this.mixingTableRows.forEach(function (r) {
-          totalMl += r.ml;
-        });
+      created: function created() {
+        this.resetLiquidForm();
+      },
+      computed: {
+        flavourPgVol: function flavourPgVol() {
+          return this.currentLiquid.getPgFlavourVol();
+        },
+        flavourVgVol: function flavourVgVol() {
+          return this.currentLiquid.getVgFlavourVol();
+        },
 
-        return {
-          ml: totalMl,
-          perc: 100
-        };
+        pgNicVol: function pgNicVol() {
+          return this.currentLiquid.getPgNicVol();
+        },
+        pgZeroVol: function pgZeroVol() {
+          return this.currentLiquid.getPgZeroVol();
+        },
+        vgVol: function vgVol() {
+          return this.currentLiquid.getVgVol();
+        },
+        mixingTableRows: function mixingTableRows() {
+          var self = this;
+          var rows = [{
+            name: 'Base nicotine',
+            ml: self.pgNicVol,
+            perc: self.pgNicVol / self.currentLiquid.target.batchSize * 100
+          }, {
+            name: 'PG (0 mg/ml)',
+            ml: self.pgZeroVol,
+            perc: self.pgZeroVol / self.currentLiquid.target.batchSize * 100
+          }, {
+            name: 'VG (0 mg/ml)',
+            ml: self.vgVol,
+            perc: self.vgVol / self.currentLiquid.target.batchSize * 100
+          }];
+
+          self.currentLiquid.flavours.forEach(function (f) {
+            rows.push({
+              name: f.flavour.name,
+              perc: f.perc,
+              ml: f.perc / 100 * self.currentLiquid.target.batchSize
+            });
+          });
+
+          return rows;
+        },
+        mixingTableTotals: function mixingTableTotals() {
+          var totalMl = 0;
+          this.mixingTableRows.forEach(function (r) {
+            totalMl += r.ml;
+          });
+
+          return {
+            ml: totalMl,
+            perc: 100
+          };
+        }
+      },
+      components: {
+        'liquid-list': require('./components/liquid-list'),
+        'flavour-list': require('./components/flavour-list')
+      },
+      filters: {
+        'round': roundingFilter
       }
-    },
-    components: {
-      'liquid-list': require('./components/liquid-list'),
-      'flavour-list': require('./components/flavour-list')
-    },
-    filters: {
-      'round': roundingFilter
-    }
-  });
+    });
 
-  $('body').swipe({
-    swipeLeft: function swipeLeft(event, direction, distance, duration, fingerCount) {
-      // Close mobile menu
-      $('#mobile-menu-toggle').removeClass('open');
+    $('body').swipe({
+      swipeLeft: function swipeLeft(event, direction, distance, duration, fingerCount) {
+        // Close mobile menu
+        $('#mobile-menu-toggle').removeClass('open');
 
-      var flavourList = $('#flavour-list');
-      var liquidList = $('#liquid-list');
-      if (flavourList.hasClass('open')) {
-        // Do nothing if menu is already open
-        // return false;
-      } else if (liquidList.hasClass('open')) {
-        // Close the liquid list instead if it's open
-        liquidList.removeClass('open');
-      } else {
-        // Open list
-        flavourList.addClass('open');
+        var flavourList = $('#flavour-list');
+        var liquidList = $('#liquid-list');
+        if (flavourList.hasClass('open')) {
+          // Do nothing if menu is already open
+          // return false;
+        } else if (liquidList.hasClass('open')) {
+          // Close the liquid list instead if it's open
+          liquidList.removeClass('open');
+        } else {
+          // Open list
+          flavourList.addClass('open');
+        }
+      },
+      swipeRight: function swipeRight(event, direction, distance, duration, fingerCount) {
+        // Close mobile menu
+        $('#mobile-menu-toggle').removeClass('open');
+
+        var flavourList = $('#flavour-list');
+        var liquidList = $('#liquid-list');
+        if (liquidList.hasClass('open')) {
+          // Do nothing if menu is open
+          // return false;
+        } else if (flavourList.hasClass('open')) {
+          // Close flavour list instead if it's open
+          flavourList.removeClass('open');
+        } else {
+          // open list
+          liquidList.addClass('open');
+        }
       }
-    },
-    swipeRight: function swipeRight(event, direction, distance, duration, fingerCount) {
-      // Close mobile menu
-      $('#mobile-menu-toggle').removeClass('open');
+    });
+  };
 
-      var flavourList = $('#flavour-list');
-      var liquidList = $('#liquid-list');
-      if (liquidList.hasClass('open')) {
-        // Do nothing if menu is open
-        // return false;
-      } else if (flavourList.hasClass('open')) {
-        // Close flavour list instead if it's open
-        flavourList.removeClass('open');
-      } else {
-        // open list
-        liquidList.addClass('open');
-      }
-    }
-  });
+  IOConnection.on('connect', startApp);
 
   var checkSwipe = function checkSwipe() {
     if (window.innerWidth > 768) {
@@ -1250,9 +1258,11 @@ module.exports = Vue.component('liquid-list', {
 },{"../lib/ioconnection":14}],14:[function(require,module,exports){
 "use strict";
 
-var IOConnection = io.connect();
+if (!window.IOConnection) {
+  window.IOConnection = io.connect();
+}
 
-module.exports = IOConnection;
+module.exports = window.IOConnection;
 
 },{}],15:[function(require,module,exports){
 'use strict';
@@ -1308,12 +1318,10 @@ var SocketConnection = function () {
   }, {
     key: 'createFlavour',
     value: function createFlavour(flavour) {
-      var _this = this;
-
       return new Promise(function (resolve, reject) {
         IOConnection.emit('flavour:create', {
-          name: _this.newFlavour.name,
-          isVg: _this.newFlavour.isVg
+          name: flavour.name,
+          isVg: flavour.isVg
         }, function (res) {
           if (res.error) {
             if (typeof res.error == 'string') {
@@ -1364,7 +1372,7 @@ var Flavour = function () {
           return reject(new Error("Name is required"));
         }
 
-        SocketConnection.createFlavour().then(resolve).catch(reject);
+        SocketConnection.createFlavour(_this).then(resolve).catch(reject);
       });
     }
   }]);

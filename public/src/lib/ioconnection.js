@@ -1,3 +1,5 @@
-var IOConnection = io.connect();
+if (!window.IOConnection) {
+  window.IOConnection = io.connect();
+}
 
-module.exports = IOConnection;
+module.exports = window.IOConnection;

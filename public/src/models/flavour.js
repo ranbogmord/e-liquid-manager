@@ -15,7 +15,7 @@ class Flavour {
         return reject(new Error("Name is required"));
       }
 
-      SocketConnection.createFlavour().then(resolve).catch(reject);
+      SocketConnection.createFlavour(this).then(resolve).catch(reject);
     });
   }
 }

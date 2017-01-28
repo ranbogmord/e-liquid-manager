@@ -37,8 +37,8 @@ class SocketConnection {
   static createFlavour(flavour) {
     return new Promise((resolve, reject) => {
       IOConnection.emit('flavour:create', {
-        name: this.newFlavour.name,
-        isVg: this.newFlavour.isVg
+        name: flavour.name,
+        isVg: flavour.isVg
       }, function (res) {
         if (res.error) {
           if (typeof res.error == 'string') {
