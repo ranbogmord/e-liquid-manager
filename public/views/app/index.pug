@@ -1,0 +1,117 @@
+extends ../layout.pug
+
+block append styles
+    link(href="/css/style.css", rel="stylesheet")
+
+block content
+    div#e-liquid-app
+        header#main-header
+            h1#brand E-Liquid Manager
+            a#mobile-menu-toggle(href='#')
+                span menu
+            ul#menu
+                li
+                    a(href='/me') Profile
+                li
+                    a(href='/logout') Logout
+
+
+        aside#liquid-list
+            h3 E-liquids
+            liquid-list(@liquid-added="setCurrentLiquid")
+            button.primary.expand Add e-liquid
+
+        main#mix-area
+            .name-row
+                input(type='text', v-model='currentLiquid.name', :class='{error: currentLiquid.nameError}', placeholder='e-liquid name')
+            .mix-containers
+                #base-container.mix-container
+                    .mix-container-header
+                        h2 Base
+                    .mix-container-row
+                        .form-field
+                            label
+                                | Nicotine strength (mg/ml):
+                                br
+                                input(type='number', v-model='currentLiquid.base.nicStrength')
+                #target-container.mix-container
+                    .mix-container-header
+                        h2 Target
+                    .mix-container-row
+                        .form-field
+                            label
+                                | Batch size (ml):
+                                br
+                                input(type='number', v-model='currentLiquid.target.batchSize')
+                    .mix-container-row
+                        .form-field
+                            label
+                                | Nicotine strength (mg/ml):
+                                br
+                                input(type='number', v-model='currentLiquid.target.nicStrength')
+                    .mix-container-row
+                        .form-field
+                            label
+                                | PG (%):
+                                br
+                                input(type='number', v-model='currentLiquid.target.pgPercent')
+                    .mix-container-row
+                        .form-field
+                            label
+                                | VG (%):
+                                br
+                                input(type='number', v-model='currentLiquid.target.vgPercent')
+                #flavour-container.mix-container
+                    .mix-container-header
+                        h2 Flavours
+                    .mix-container-row(v-for='f in currentLiquid.flavours')
+                        .flavour-field
+                            span {{ f.flavour.name }}:
+                            input(type='number', v-model='f.perc')
+            #mixing-table
+                h2 Mixing time
+                table
+                    tr
+                        th What
+                        th ml
+                        th %
+                    tr(:class='{error: r.ml < 0}', v-for='r in mixingTableRows')
+                        td {{ r.name }}
+                        td {{ r.ml | round(2) }} ml
+                        td {{ r.perc | round(2) }} %
+                    tr
+                        th Totals
+                        th {{ mixingTableTotals.ml | round(2) }} ml
+                        th {{ mixingTableTotals.perc | round(0) }} %
+            .actions-row
+                button.primary(@click.prevent='saveLiquid') Save
+                button.warning(@click.prevent='resetLiquidForm') Cancel
+
+        aside#flavour-list
+            h3 Flavours
+            flavour-list(@flavour-added='addFlavour')
+            button.primary.expand(v-show='!showNewFlavourForm', @click.prevent='showNewFlavourForm = true') Add flavour
+            #flavour-form(v-show='showNewFlavourForm')
+                h3 Add flavour
+                .form-field
+                    label
+                        | Name:
+                        br
+                        input(type='text', v-model='newFlavour.name')
+                .form-field
+                    label
+                        | Is VG based?
+                        input(type='checkbox', v-model='newFlavour.isVg')
+                button.primary.expand(@click.prevent='createFlavour') Add
+                button.warning.expand(@click.prevent='resetFlavourForm') Cancel
+
+    include ../partials/templates.pug
+
+block append scripts
+    script(src="/socket.io/socket.io.js")
+    script(src="/vendor/vue/vue.min.js")
+    script(src="/vendor/jquery/jquery.js")
+    script(src="/vendor/jquery/jquery.touchswipe.js")
+    script(src="/vendor/vue/vue-resource.min.js")
+    script(src="/js/mobile-menu.js")
+    script(src="/js/dist/app.js")
