@@ -58,17 +58,19 @@ const validateFlavourBody = (params) => {
 };
 
 router.param('fid', (req, res, next, id) => {
-  models.Flavour.findById(id, (err, flavour) => {
-    if (err) return res.status(500).send('Internal server error');
+  models.Flavour.findById(id).populate('vendor').then((flavour) => {
     if (!flavour) return res.status(404).send('Flavour not found');
 
     req.requestedFlavour = flavour;
     next();
+  })
+  .catch(err => {
+    return res.status(500).send('Internal server error');
   });
 });
 
 router.get('/', (req, res) => {
-  models.Flavour.find({}, null, {sort: 'name'}).populate('addedBy').exec((err, flavours) => {
+  models.Flavour.find({}, null, {sort: 'name'}).populate('addedBy').populate('vendor').exec((err, flavours) => {
     if (err) return res.status(500).send('Internal server error');
 
     return res.render('admin/flavour/list', {

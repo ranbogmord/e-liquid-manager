@@ -163,6 +163,14 @@ module.exports = (io, socket) => {
         });
       }
 
+      flavours = flavours.map((flav) => {
+        if (flav.vendor) {
+          flav.name = flav.name + " " + flav.vendor.abbr;
+        }
+
+        return flav;
+      });
+
       return respond(flavours);
     });
   });
