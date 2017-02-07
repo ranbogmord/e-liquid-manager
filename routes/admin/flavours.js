@@ -27,7 +27,7 @@ const validateFlavourBody = (params) => {
           .then((vendors) => {
             vendors = vendors.map((vendor) => {
               vendor = vendor.toJSON();
-              vendor.selected = vendor._id.toString() == req.requestedFlavour.vendor._id;
+              vendor.selected = vendor._id.toString() == (req.requestedFlavour.vendor || {})._id;
               return vendor;
             });
 
@@ -99,7 +99,7 @@ router.get('/:fid', (req, res) => {
       .then((vendors) => {
         vendors = vendors.map((vendor) => {
           vendor = vendor.toJSON();
-          vendor.selected = vendor._id.toString() == req.requestedFlavour.vendor._id;
+          vendor.selected = vendor._id.toString() == (req.requestedFlavour.vendor || {})._id;
           return vendor;
         });
 
