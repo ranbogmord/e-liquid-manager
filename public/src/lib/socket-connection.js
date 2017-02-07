@@ -38,7 +38,8 @@ class SocketConnection {
     return new Promise((resolve, reject) => {
       IOConnection.emit('flavour:create', {
         name: flavour.name,
-        isVg: flavour.isVg
+        isVg: flavour.isVg,
+        vendor: flavour.vendor
       }, function (res) {
         if (res.error) {
           if (typeof res.error == 'string') {
@@ -51,6 +52,14 @@ class SocketConnection {
         return resolve();
       });
     })
+  }
+
+  static fetchVendors() {
+    return new Promise((resolve, reject) => {
+      IOConnection.emit('vendors:list', (res) => {
+        return resolve(res);
+      });
+    });
   }
 }
 

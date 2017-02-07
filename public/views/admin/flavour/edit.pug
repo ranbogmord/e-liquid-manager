@@ -1,10 +1,10 @@
-extends ../layout_admin.pug
+extends ../../layout_admin.pug
 
 block content
     h1 Edit flavour
 
     div#flavour-form
-        include ./flavour-form.pug
+        include ./form.pug
 
     form(action="/admin/flavours/" + flavour._id + "/delete", method="post", onsubmit="return confirm('Are you sure? This cannot be undone!')")
         div.form-field

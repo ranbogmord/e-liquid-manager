@@ -6,6 +6,13 @@ form(method="post", action=form.action)
         label(for="name") Name
         input(type="text", value=flavour.name, id="name", name="name")
     div.form-field
+        label(for="vendor") Vendor
+            select(name="vendor", id="vendor")
+                option(value="") Unknown
+                each vendor in (form.vendors || [])
+                    option(value=vendor._id, selected=vendor.selected)= vendor.name
+
+    div.form-field
         label(for="addedBy") Added by
         select(name="addedBy")#addedBy
             option(value="") Unknown

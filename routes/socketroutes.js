@@ -156,12 +156,20 @@ module.exports = (io, socket) => {
   });
 
   socket.on('flavour:list', (respond) => {
-    models.Flavour.find({}).exec((err, flavours) => {
+    models.Flavour.find({}).populate('vendor').exec((err, flavours) => {
       if (err) {
         return respond({
           error: 'Failed to fetch flavours'
         });
       }
+
+      flavours = flavours.map((flav) => {
+        if (flav.vendor) {
+          flav.name = flav.name + " " + flav.vendor.abbr;
+        }
+
+        return flav;
+      });
 
       return respond(flavours);
     });
@@ -171,6 +179,7 @@ module.exports = (io, socket) => {
     const flavour = new models.Flavour({
       name: data.name,
       basePercent: 0,
+      vendor: data.vendor || null,
       isVg: data.isVg || false,
       addedBy: socket.request.user._id
     });
@@ -186,4 +195,16 @@ module.exports = (io, socket) => {
       return respond(flavour);
     });
   });
+
+  socket.on('vendors:list', (respond) => {
+    models.FlavourVendor.find({
+      enabled: true
+    })
+    .then((vendors) => {
+      return respond(vendors);
+    })
+    .catch((err) => {
+      return respond([]);
+    })
+  })
 };

@@ -104,6 +104,12 @@ block content
                     label
                         | Is VG based?
                         input(type='checkbox', v-model='newFlavour.isVg')
+                .form-field
+                    label
+                        | Flavour vendor
+                        select(v-model="newFlavour.vendor")
+                            option(value="") Other
+                            option(v-for="vendor in availableVendors", :value="vendor._id") {{ vendor.name }}
                 button.primary.expand(@click.prevent='createFlavour') Add
                 button.warning.expand(@click.prevent='resetFlavourForm') Cancel
 

@@ -1,0 +1,24 @@
+extends ../../layout_admin.pug
+
+block content
+    h1 Users
+    a(href="/admin/users/new").new-user-link New user
+    div.item-list
+        .item
+            .col-40
+                span Username
+            .col-20.hide-phone
+                span Email
+            .col-20.hide-tablet-landscape
+                span Created
+            .col-20.hide-tablet-landscape
+                span Last updated
+
+        each row in (users || [])
+            .item
+                .col-40
+                    a(href="/admin/users/" + row._id)= row.username
+                .col-20.hide-phone
+                    a(href="/admin/users/" + row._id)= row.email
+                .col-20.hide-tablet-landscape= row.createdAt
+                .col-20.hide-tablet-landscape= row.updatedAt

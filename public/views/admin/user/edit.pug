@@ -1,10 +1,10 @@
-extends ../layout_admin.pug
+extends ../../layout_admin.pug
 
 block content
     h1 Edit user
 
     div#user-form
-        include ./user-form.pug
+        include ./form.pug
 
     form(action="/admin/users/" + user._id + "/delete", method="post", onsubmit="return confirm('Are you sure? This cannot be undone!')")
         div.form-field

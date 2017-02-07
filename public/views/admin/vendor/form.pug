@@ -1,0 +1,23 @@
+form(method="post", action=form.action)
+    if form.error
+        div.form-error
+            p= form.error
+    div.form-field
+        label(for="name") Name
+        input(type="text", value=vendor.name, id="name", name="name")
+    div.form-field
+        label(for="abbr") Abbrevation
+        input(type="text", value=vendor.abbr, id="abbr", name="abbr")
+    div.form-field
+        label(for="enabled") Enabled
+        br
+        input(type="checkbox", value="1", id="enabled", name="enabled", checked=!!vendor.enabled)
+    if form.users
+        div.form-field
+            label(for="addedBy") Added by
+            select(name="addedBy")#addedBy
+                option(value="") Unknown
+                each user in (form.users || [])
+                    option(value=user._id, selected=user.selected)= user.username
+    div.form-field
+        input(type="submit", value=form.submitValue).primary

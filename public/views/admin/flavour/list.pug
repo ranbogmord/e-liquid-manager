@@ -1,4 +1,4 @@
-extends ../layout_admin.pug
+extends ../../layout_admin.pug
 
 block content
     h1 Flavours
@@ -16,7 +16,7 @@ block content
         each row in (flavours || [])
             .item
                 .col-40
-                    a(href="/admin/flavours/" + row._id)= row.name
+                    a(href="/admin/flavours/" + row._id)= row.name + " " + ((row.vendor || {}).abbr || "")
                 .col-20.hide-phone
                     if row.addedBy
                         a(href="/admin/users/" + row.addedBy._id)= (row.addedBy || {}).username

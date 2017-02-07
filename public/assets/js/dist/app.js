@@ -867,6 +867,7 @@ Promise.disableSynchronous = function() {
 var Liquid = require('./models/liquid');
 var Flavour = require('./models/flavour');
 var IOConnection = require('./lib/ioconnection');
+var SocketConnection = require('./lib/socket-connection');
 
 !function ($) {
   var roundingFilter = Vue.filter('round', function (val, decimals) {
@@ -891,7 +892,8 @@ var IOConnection = require('./lib/ioconnection');
           name: '',
           basePercent: 0,
           isVg: false
-        })
+        }),
+        availableVendors: []
       },
       watch: {
         'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
@@ -951,7 +953,14 @@ var IOConnection = require('./lib/ioconnection');
         }
       },
       created: function created() {
+        var _this3 = this;
+
         this.resetLiquidForm();
+
+        SocketConnection.fetchVendors().then(function (vendors) {
+          _this3.availableVendors = vendors;
+          console.log("vendors: ", vendors);
+        });
       },
       computed: {
         flavourPgVol: function flavourPgVol() {
@@ -1071,7 +1080,7 @@ var IOConnection = require('./lib/ioconnection');
   });
 }(jQuery);
 
-},{"./components/flavour-list":12,"./components/liquid-list":13,"./lib/ioconnection":14,"./models/flavour":16,"./models/liquid":17}],12:[function(require,module,exports){
+},{"./components/flavour-list":12,"./components/liquid-list":13,"./lib/ioconnection":14,"./lib/socket-connection":15,"./models/flavour":16,"./models/liquid":17}],12:[function(require,module,exports){
 'use strict';
 
 var IOConnection = require('../lib/ioconnection');
@@ -1319,7 +1328,8 @@ var SocketConnection = function () {
       return new Promise(function (resolve, reject) {
         IOConnection.emit('flavour:create', {
           name: flavour.name,
-          isVg: flavour.isVg
+          isVg: flavour.isVg,
+          vendor: flavour.vendor
         }, function (res) {
           if (res.error) {
             if (typeof res.error == 'string') {
@@ -1330,6 +1340,15 @@ var SocketConnection = function () {
           }
 
           return resolve();
+        });
+      });
+    }
+  }, {
+    key: 'fetchVendors',
+    value: function fetchVendors() {
+      return new Promise(function (resolve, reject) {
+        IOConnection.emit('vendors:list', function (res) {
+          return resolve(res);
         });
       });
     }
@@ -1356,7 +1375,8 @@ var Flavour = function () {
 
     Object.assign(this, params, {
       name: "",
-      isVg: false
+      isVg: false,
+      vendor: ""
     });
   }
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --debug=5858 --expose-debug-as=v8debug index.js"
   },
   "author": "John Eriksson <root@ranbogmord.com>",
   "license": "MIT",

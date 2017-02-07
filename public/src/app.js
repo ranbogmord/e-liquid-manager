@@ -1,6 +1,7 @@
 const Liquid = require('./models/liquid');
 const Flavour = require('./models/flavour');
 const IOConnection = require('./lib/ioconnection');
+const SocketConnection = require('./lib/socket-connection');
 
 !function ($) {
   var roundingFilter = Vue.filter('round', function (val, decimals) {
@@ -25,7 +26,8 @@ const IOConnection = require('./lib/ioconnection');
           name: '',
           basePercent: 0,
           isVg: false
-        })
+        }),
+        availableVendors: []
       },
       watch: {
         'currentLiquid.target.pgPercent': function () {
@@ -86,6 +88,11 @@ const IOConnection = require('./lib/ioconnection');
       },
       created: function () {
         this.resetLiquidForm();
+
+        SocketConnection.fetchVendors().then((vendors) => {
+          this.availableVendors = vendors;
+          console.log("vendors: ", vendors);
+        });
       },
       computed: {
         flavourPgVol: function () {
