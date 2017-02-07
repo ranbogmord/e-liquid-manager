@@ -1,24 +1,23 @@
-extends ../layout_admin.pug
+extends ../../layout_admin.pug
 
 block content
-    h1 Flavours
+    h1 Flavour vendors
+    a(href="/admin/flavourvendors/new").new-user-link New vendor
     div.item-list
         .item
             .col-40
                 span Name
             .col-20.hide-phone
-                span Added by
+                span Abbreviation
             .col-20.hide-tablet-landscape
                 span Created
             .col-20.hide-tablet-landscape
                 span Last updated
 
-        each row in (flavours || [])
+        each row in (vendors || [])
             .item
                 .col-40
-                    a(href="/admin/flavours/" + row._id)= row.name
-                .col-20.hide-phone
-                    if row.addedBy
-                        a(href="/admin/users/" + row.addedBy._id)= (row.addedBy || {}).username
+                    a(href="/admin/flavourvendors/" + row._id)= row.name
+                .col-20.hide-phone= row.abbr
                 .col-20.hide-tablet-landscape= row.createdAt
                 .col-20.hide-tablet-landscape= row.updatedAt

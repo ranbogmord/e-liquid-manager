@@ -5,7 +5,8 @@ class Flavour {
   constructor(params) {
     Object.assign(this, params, {
       name: "",
-      isVg: false
+      isVg: false,
+      vendor: ""
     });
   }
 
