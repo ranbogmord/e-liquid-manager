@@ -2,49 +2,48 @@ const router = module.exports = require('express').Router();
 const authorization = require('../../lib/authorization');
 const models = require('../../models');
 const async = require('async');
+const Promise = require('promise');
+
+const getFormData = (req) => {
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      models.User.find({}, null, {sort: "username"}),
+      models.FlavourVendor.find({}, null, {sort: 'name'})])
+    .then(values =>  {
+      let users = values[0].map(user => {
+        user = user.toJSON();
+        user.selected = user._id.toString() == req.requestedFlavour.addedBy;
+        return user;
+      });
+
+      let vendors = values[1].map(vendor => {
+        vendor = vendor.toJSON();
+        vendor.selected = vendor._id.toString() == (req.requestedFlavour.vendor || {})._id;
+        return vendor;
+      });
+
+      return resolve(users, vendors);
+    })
+    .catch(err => {
+      return resolve([], []);
+    });
+  });
+};
 
 const validateFlavourBody = (params) => {
   return (req, res, next) => {
     const body = req.body;
 
     if (!params.validate || !params.validate(body)) {
-      async.parallel({
-        users: (callback) => {
-          models.User.find({}, null, {sort: 'username'}).exec((err, users) => {
-            if (err) users = [];
-
-            users = users.map((user) => {
-              user = user.toJSON();
-              user.selected = user._id.toString() == req.requestedFlavour.addedBy;
-              return user;
-            });
-
-            callback(null, users);
-          });
-        },
-        vendors: (callback) => {
-          models.FlavourVendor.find({}, null, {sort: 'name'})
-          .then((vendors) => {
-            vendors = vendors.map((vendor) => {
-              vendor = vendor.toJSON();
-              vendor.selected = vendor._id.toString() == (req.requestedFlavour.vendor || {})._id;
-              return vendor;
-            });
-
-            callback(null, vendors);
-          })
-          .catch((err) => {
-            callback(null, []);
-          });
-        }
-      }, (err, results) => {
+      getFormData(req)
+      .then((users, vendors) => {
         return res.render(params.template, {
           form: {
             action: req.originalUrl,
             submitValue: params.submitValue,
             error: params.error,
-            users: results.users,
-            vendors: results.vendors,
+            users: users,
+            vendors: vendors,
           },
           flavour: {
             name: body.name
@@ -133,7 +132,7 @@ router.post('/:fid', validateFlavourBody({
   const body = req.body;
 
   req.requestedFlavour.name = body.name;
-  req.requestedFlavour.addedBy = body.addedBy;
+  req.requestedFlavour.addedBy = body.addedBy || null;
   req.requestedFlavour.vendor = body.vendor || null;
 
   req.requestedFlavour.save((err) => {
