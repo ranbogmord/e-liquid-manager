@@ -76,7 +76,7 @@ body {
     border-radius: 3px;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5); }
     body #login-box header h1 {
-      font-family: "Poiret One", cursive;
+      font-family: "Poiret One", sans-serif;
       text-align: center; }
     body #login-box form {
       width: 100%; }

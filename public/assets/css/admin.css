@@ -45,6 +45,13 @@ h1, h2, h3, h4 {
     margin-top: 5px;
     outline: 0;
     padding-left: 10px; }
+  .form-field textarea {
+    line-height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-top: 10px; }
 
 .form-error {
   padding: 0 10px;
@@ -68,7 +75,7 @@ header#main-header {
     font-size: 24px;
     line-height: 60px;
     margin: 0;
-    font-family: 'Poiret One', cursive;
+    font-family: 'Poiret One', sans-serif;
     color: #2c3e50; }
     .theme-dark header#main-header #brand {
       color: #fefefe; }
@@ -216,7 +223,7 @@ body {
   align-items: flex-start;
   padding: 40px; }
   .admin-page h1 {
-    font-family: "Poiret One", cursive; }
+    font-family: "Poiret One", sans-serif; }
 
 .item-list {
   width: 100%;

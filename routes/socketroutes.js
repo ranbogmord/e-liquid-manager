@@ -1,19 +1,18 @@
 const models = require('../models');
 const statistics = require('../lib/statistics');
 const async = require('async');
+const _ = require('lodash');
 
 module.exports = (io, socket) => {
   socket.on('liquid:list', (respond) => {
-    models.Liquid.find({
-      author: socket.request.user._id
-    }).populate('flavours.flavour').populate('comments').exec((err, liquids) => {
-      if (err) {
-        return respond({
-          error: 'Failed to fetch liquids'
-        });
-      }
-
+    models.Liquid.findPopulatedByAuthor(socket.request.user._id)
+    .then(liquids => {
       return respond(liquids);
+    })
+    .catch(err => {
+      return respond({
+        error: 'Failed to fetch liquids'
+      });
     });
   });
 
@@ -71,12 +70,21 @@ module.exports = (io, socket) => {
         });
       });
 
-      models.Liquid.populate(liquid, {
-        path: 'flavours.flavour'
-      }, (err, liquid) => {
-        if (err) return;
+      models.Liquid.findPopulatedById(liquid._id)
+      .then(liquid => {
+        if (!liquid) {
+          return respond({
+            error: 'Failed to create liquid'
+          });
+        }
+
         socket.emit('liquid:created', liquid);
         respond(liquid);
+      })
+      .catch(err => {
+        return respond({
+          error: "Failed to create liquid"
+        });
       });
     });
   });
@@ -144,19 +152,30 @@ module.exports = (io, socket) => {
           });
         });
 
-        models.Liquid.populate(liquid, {
-          path: 'flavours.flavour'
-        }, (err, liquid) => {
-          if (err) return;
+        models.Liquid.findPopulatedById(liquid._id)
+        .then(liquid => {
+          if (!liquid) {
+            return respond({
+              error: 'Failed to update liquid'
+            });
+          }
+
           socket.emit('liquid:updated', liquid);
           respond(liquid);
+        })
+        .catch(err => {
+          return respond({
+            error: "Failed to update liquid"
+          });
         });
       });
     });
   });
 
   socket.on('flavour:list', (respond) => {
-    models.Flavour.find({}).populate('vendor').exec((err, flavours) => {
+    models.Flavour.find({})
+    .populate('vendor')
+    .exec((err, flavours) => {
       if (err) {
         return respond({
           error: 'Failed to fetch flavours'
@@ -206,5 +225,104 @@ module.exports = (io, socket) => {
     .catch((err) => {
       return respond([]);
     })
-  })
+  });
+
+  socket.on('comment:create', (data, respond) => {
+    if (!data.liquid) {
+      return respond({
+        error: "Missing liquid"
+      });
+    }
+
+    models.Liquid.findById(data.liquid).then(liquid => {
+      if (!liquid) {
+        return respond({
+          error: "Invalid liquid"
+        });
+      }
+
+      let comment = new models.Comment(data);
+      comment.author = socket.request.user._id;
+
+      const isValid = comment.isValid();
+      if (isValid === true) {
+        comment.save(err => {
+          if (err) {
+            return respond({
+              error: err.message
+            });
+          }
+
+          if (!_.isArray(liquid.comments)) {
+            liquid.comments = [];
+          }
+
+          comment.liquid = liquid;
+          comment.author = socket.request.user;
+
+          liquid.comments.push(comment._id);
+          liquid.save(err => {
+            if (err) {
+              return respond({
+                error: err.message
+              });
+            }
+
+            return respond(comment);
+          });
+        });
+      } else {
+        return respond({
+          error: isValid
+        })
+      }
+    })
+    .catch(err => {
+      return respond(err.message);
+    });
+  });
+
+  socket.on('comment:delete', (data, respond) => {
+    if (!data.comment) {
+      return respond({
+        error: "Missing comment"
+      });
+    }
+
+    if (data.comment._id) {
+      data.comment = data.comment._id;
+    }
+
+    models.Comment.findById(data.comment)
+    .then(comment => {
+      if (!comment) {
+        return respond({
+          error: "Invalid comment"
+        });
+      }
+
+      if (comment.author.toString() !== socket.request.user._id.toString()) {
+        return respond({
+          error: "You're not allowed to remove this comment"
+        });
+      }
+
+      comment.remove(err => {
+        if (err) {
+          return respond({
+            error: err.message
+          });
+        }
+
+        return respond({
+          success: true
+        });
+      });
+    })
+    .catch(err => {
+      return respond({
+        error: err.message
+      });
+    });
+  });
 };

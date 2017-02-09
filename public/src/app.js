@@ -1,7 +1,10 @@
 const Liquid = require('./models/liquid');
 const Flavour = require('./models/flavour');
+const Comment = require('./models/comment');
 const IOConnection = require('./lib/ioconnection');
 const SocketConnection = require('./lib/socket-connection');
+const _ = require('lodash');
+const moment = require('moment');
 
 !function ($) {
   var roundingFilter = Vue.filter('round', function (val, decimals) {
@@ -27,6 +30,7 @@ const SocketConnection = require('./lib/socket-connection');
           basePercent: 0,
           isVg: false
         }),
+        newComment: new Comment(),
         availableVendors: []
       },
       watch: {
@@ -46,6 +50,11 @@ const SocketConnection = require('./lib/socket-connection');
       methods: {
         setCurrentLiquid: function (data) {
           this.currentLiquid = new Liquid(data || {});
+          if (data && data._id) {
+            this.newComment.liquid = data._id;
+          } else {
+            this.newComment.liquid = null;
+          }
         },
         createFlavour: function () {
           this.newFlavour.save()
@@ -66,6 +75,38 @@ const SocketConnection = require('./lib/socket-connection');
             alert(err.message);
             console.log(err);
           })
+        },
+        saveComment: function () {
+          this.newComment.save()
+          .then(comment => {
+            if (!_.isArray(this.currentLiquid.comments)) {
+              this.currentLiquid.comments = [];
+            }
+
+            this.currentLiquid.comments.unshift(comment);
+            this.newComment = new Comment({
+              liquid: this.currentLiquid._id
+            });
+          })
+          .catch(err => {
+            alert(err.message);
+            console.log(err);
+          });
+        },
+        removeComment: function (comment) {
+          if (confirm("Are you sure? This is irreverisble!")) {
+            SocketConnection.removeComment(comment._id)
+            .then(() => {
+              let idx = this.currentLiquid.comments.indexOf(comment);
+              if (idx !== -1) {
+                this.currentLiquid.comments.splice(idx, 1);
+              }
+            })
+            .catch(err => {
+              alert(err.message);
+              console.log(err);
+            });
+          }
         },
         resetFlavourForm: function () {
           this.showNewFlavourForm = false;
@@ -91,7 +132,6 @@ const SocketConnection = require('./lib/socket-connection');
 
         SocketConnection.fetchVendors().then((vendors) => {
           this.availableVendors = vendors;
-          console.log("vendors: ", vendors);
         });
       },
       computed: {
@@ -158,7 +198,15 @@ const SocketConnection = require('./lib/socket-connection');
         'flavour-list': require('./components/flavour-list')
       },
       filters: {
-        'round': roundingFilter
+        'round': roundingFilter,
+        'date-format': (date) => {
+          const d = moment(date);
+          if (!d.isValid()) {
+            return date;
+          }
+
+          return d.format('YYYY-MM-DD HH:mm:ss Z');
+        }
       }
     });
   };
