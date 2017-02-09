@@ -29,6 +29,15 @@
     outline: 0;
     padding-left: 10px;
   }
+
+  textarea {
+    line-height: 30px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
 }
 
 .form-error {

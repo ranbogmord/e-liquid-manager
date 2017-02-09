@@ -87,7 +87,7 @@
       height: 60px;
       line-height: 60px;
       outline: 0;
-      font-family: 'Poiret One', cursive;
+      font-family: 'Poiret One', sans-serif;
       font-size: 40px;
 
       &.error {
@@ -162,6 +162,50 @@
   td, th {
     text-align: left;
     padding: 10px 10px 10px 0;
+  }
+}
+
+#comments {
+  width: 100%;
+  padding: 0 20px;
+
+  #new-comment {
+    width: 50%;
+    height: 100px;
+    margin-bottom: 20px;
+
+    @media #{$breakpoint-tablet-landscape} {
+      width: 100%;
+    }
+  }
+
+  .comment-list {
+    .comment {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid #efefef;
+      
+      span {
+        display: block;
+      }
+
+      .author {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .posted {
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .remove {
+        float: right;
+        color: $warning;
+        cursor: pointer;
+      }
+    }
   }
 }
 

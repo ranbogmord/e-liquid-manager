@@ -85,9 +85,26 @@ block content
                         th Totals
                         th {{ mixingTableTotals.ml | round(2) }} ml
                         th {{ mixingTableTotals.perc | round(0) }} %
+
             .actions-row
                 button.primary(@click.prevent='saveLiquid') Save
                 button.warning(@click.prevent='resetLiquidForm') Cancel
+
+            #comments(v-if="currentLiquid._id")
+                h2 Comments
+                .comment-list
+                    .comment(v-for="comment in currentLiquid.comments")
+                        span.remove(@click.prevent="removeComment(comment)") Remove comment
+                        span.author {{ comment.author.username }}
+                        span.posted {{ comment.createdAt | date-format }}
+                        div {{ comment.comment }}
+                #add-comment-form
+                    .form-field
+                        label(for="new-comment") New comment
+                            br
+                            textarea(v-model="newComment.comment", id="new-comment")
+                            div
+                                button(@click.prevent="saveComment").primary Add comment
 
         aside#flavour-list
             h3 Flavours

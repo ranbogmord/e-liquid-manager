@@ -54,6 +54,35 @@ class SocketConnection {
     })
   }
 
+  static createComment(comment) {
+    return new Promise((resolve, reject) => {
+      IOConnection.emit('comment:create', {
+        comment: comment.comment,
+        liquid: comment.liquid
+      }, (res) => {
+        if (res.error) {
+          return reject(new Error(res.error));
+        }
+
+        return resolve(res);
+      });
+    });
+  }
+
+  static removeComment(comment) {
+    return new Promise((resolve, reject) => {
+      IOConnection.emit('comment:delete', {
+        comment: comment
+      }, res => {
+        if (res.error) {
+          return reject(new Error(res.error));
+        }
+
+        return resolve();
+      });
+    });
+  }
+
   static fetchVendors() {
     return new Promise((resolve, reject) => {
       IOConnection.emit('vendors:list', (res) => {
