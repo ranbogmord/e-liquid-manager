@@ -125,6 +125,20 @@ const moment = require('moment');
             flavour: flavour,
             perc: flavour.basePercent
           });
+        },
+        getMixingTableTotalFlavourings: function () {
+          var totalFlavourMl = 0;
+          var totalFlavourPerc = 0;
+
+          this.currentLiquid.flavours.forEach((f) => {
+            totalFlavourMl += this.currentLiquid.percentToMl(f.perc);
+            totalFlavourPerc += f.perc;
+          });
+
+          return {
+            perc: totalFlavourPerc,
+            ml: totalFlavourMl
+          };
         }
       },
       created: function () {
@@ -187,9 +201,13 @@ const moment = require('moment');
             totalMl += r.ml;
           });
 
+          var flavourStats = this.getMixingTableTotalFlavourings();
+
           return {
             ml: totalMl,
-            perc: 100
+            perc: 100,
+            flavourMl: flavourStats.ml,
+            flavourPerc: flavourStats.perc
           };
         }
       },
