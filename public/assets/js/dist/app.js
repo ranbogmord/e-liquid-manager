@@ -22382,15 +22382,31 @@ var moment = require('moment');
             flavour: flavour,
             perc: flavour.basePercent
           });
+        },
+        getMixingTableTotalFlavourings: function getMixingTableTotalFlavourings() {
+          var _this5 = this;
+
+          var totalFlavourMl = 0;
+          var totalFlavourPerc = 0;
+
+          this.currentLiquid.flavours.forEach(function (f) {
+            totalFlavourMl += _this5.currentLiquid.percentToMl(f.perc);
+            totalFlavourPerc += f.perc;
+          });
+
+          return {
+            perc: totalFlavourPerc,
+            ml: totalFlavourMl
+          };
         }
       },
       created: function created() {
-        var _this5 = this;
+        var _this6 = this;
 
         this.resetLiquidForm();
 
         SocketConnection.fetchVendors().then(function (vendors) {
-          _this5.availableVendors = vendors;
+          _this6.availableVendors = vendors;
         });
       },
       computed: {
@@ -22442,9 +22458,13 @@ var moment = require('moment');
             totalMl += r.ml;
           });
 
+          var flavourStats = this.getMixingTableTotalFlavourings();
+
           return {
             ml: totalMl,
-            perc: 100
+            perc: 100,
+            flavourMl: flavourStats.ml,
+            flavourPerc: flavourStats.perc
           };
         }
       },
