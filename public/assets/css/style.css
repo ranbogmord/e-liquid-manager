@@ -108,6 +108,13 @@ input[type='submit'] {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap; }
+  @media (max-width: 768px) {
+    #e-liquid-app {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column; } }
 
 header#main-header {
   height: 60px;
