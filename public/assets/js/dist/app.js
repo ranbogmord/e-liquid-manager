@@ -22885,15 +22885,25 @@ var moment = require('moment');
       watch: {
         'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
           this.currentLiquid.target.vgPercent = 100 - this.currentLiquid.getTargetPgPercent();
+          localStorage.setItem('preferred-target-pg', this.currentLiquid.getTargetPgPercent());
         },
         'currentLiquid.target.vgPercent': function currentLiquidTargetVgPercent() {
           this.currentLiquid.target.pgPercent = 100 - this.currentLiquid.getTargetVgPercent();
+          localStorage.setItem('preferred-target-pg', this.currentLiquid.getTargetPgPercent());
         },
         'currentLiquid.target.batchSize': function currentLiquidTargetBatchSize() {
           localStorage.setItem('preferred-batch-size', this.currentLiquid.getBatchSize());
         },
         'currentLiquid.target.nicStrength': function currentLiquidTargetNicStrength() {
           localStorage.setItem('preferred-nic-strength', this.currentLiquid.getTargetNicStrength());
+        },
+        'currentLiquid.base.nicPgPerc': function currentLiquidBaseNicPgPerc() {
+          this.currentLiquid.base.nicVgPerc = 100 - this.currentLiquid.base.nicPgPerc;
+          localStorage.setItem('preferred-nic-pg', this.currentLiquid.base.nicPgPerc);
+        },
+        'currentLiquid.base.nicVgPerc': function currentLiquidBaseNicVgPerc() {
+          this.currentLiquid.base.nicPgPerc = 100 - this.currentLiquid.base.nicVgPerc;
+          localStorage.setItem('preferred-nic-pg', this.currentLiquid.base.nicPgPerc);
         }
       },
       methods: {
@@ -22963,6 +22973,9 @@ var moment = require('moment');
         },
         resetLiquidForm: function resetLiquidForm() {
           this.setCurrentLiquid({
+            base: {
+              nicPgPerc: localStorage.getItem('preferred-nic-pg')
+            },
             target: {
               batchSize: localStorage.getItem('preferred-batch-size'),
               nicStrength: localStorage.getItem('preferred-nic-strength')
@@ -23022,8 +23035,8 @@ var moment = require('moment');
           var self = this;
           var rows = [{
             name: 'Base nicotine',
-            ml: self.pgNicVol,
-            perc: self.pgNicVol / self.currentLiquid.target.batchSize * 100
+            ml: this.currentLiquid.getNicVol(),
+            perc: this.currentLiquid.getNicPercent() * 100
           }, {
             name: 'PG (0 mg/ml)',
             ml: self.pgZeroVol,
@@ -23546,12 +23559,14 @@ var Liquid = function () {
       _id: params._id || null,
       name: params.name || null,
       base: {
-        nicStrength: (params.base || {}).nicStrength || 30
+        nicStrength: (params.base || {}).nicStrength || 30,
+        nicPgPerc: params.nicPgPerc || localStorage.getItem('preferred-nic-pg') || 100,
+        nicVgPerc: params.nicVgPerc || Math.max(100 - localStorage.getItem('preferred-nic-pg'), 0) || 0
       },
       target: {
         batchSize: (params.target || {}).batchSize || localStorage.getItem('preferred-batch-size') || 30,
-        pgPercent: (params.target || {}).pgPercent || 30,
-        vgPercent: (params.target || {}).vgPercent || 70,
+        pgPercent: (params.target || {}).pgPercent || localStorage.getItem('preferred-target-pg') || 30,
+        vgPercent: (params.target || {}).vgPercent || Math.max(100 - localStorage.getItem('preferred-target-pg'), 0) || 70,
         nicStrength: (params.target || {}).nicStrength || localStorage.getItem('preferred-nic-strength') || 3
       },
       flavours: params.flavours || [],
@@ -23665,9 +23680,24 @@ var Liquid = function () {
       return totalFlavourVg;
     }
   }, {
+    key: 'getNicVol',
+    value: function getNicVol() {
+      return this.getTargetNicStrength() / this.getBaseNicStrength() * this.getBatchSize();
+    }
+  }, {
+    key: 'getNicPercent',
+    value: function getNicPercent() {
+      return this.mlToPercent(this.getNicVol());
+    }
+  }, {
     key: 'getPgNicVol',
     value: function getPgNicVol() {
-      return this.getTargetNicStrength() / this.getBaseNicStrength() * this.getBatchSize();
+      return this.base.nicPgPerc / 100 * this.getNicVol();
+    }
+  }, {
+    key: 'getVgNicVol',
+    value: function getVgNicVol() {
+      return this.base.nicVgPerc / 100 * this.getNicVol();
     }
   }, {
     key: 'getPgZeroVol',
@@ -23677,7 +23707,7 @@ var Liquid = function () {
   }, {
     key: 'getVgVol',
     value: function getVgVol() {
-      return this.getTargetVgPercent() / 100 * this.getBatchSize() - this.getVgFlavourVol();
+      return this.getTargetVgPercent() / 100 * this.getBatchSize() - this.getVgFlavourVol() - this.getVgNicVol();
     }
   }]);
 

@@ -36,15 +36,25 @@ const moment = require('moment');
       watch: {
         'currentLiquid.target.pgPercent': function () {
           this.currentLiquid.target.vgPercent = 100 - this.currentLiquid.getTargetPgPercent();
+          localStorage.setItem('preferred-target-pg', this.currentLiquid.getTargetPgPercent());
         },
         'currentLiquid.target.vgPercent': function () {
           this.currentLiquid.target.pgPercent = 100 - this.currentLiquid.getTargetVgPercent();
+          localStorage.setItem('preferred-target-pg', this.currentLiquid.getTargetPgPercent());
         },
         'currentLiquid.target.batchSize': function () {
           localStorage.setItem('preferred-batch-size', this.currentLiquid.getBatchSize());
         },
         'currentLiquid.target.nicStrength': function () {
           localStorage.setItem('preferred-nic-strength', this.currentLiquid.getTargetNicStrength());
+        },
+        'currentLiquid.base.nicPgPerc': function () {
+          this.currentLiquid.base.nicVgPerc = 100 - this.currentLiquid.base.nicPgPerc;
+          localStorage.setItem('preferred-nic-pg', this.currentLiquid.base.nicPgPerc);
+        },
+        'currentLiquid.base.nicVgPerc': function () {
+          this.currentLiquid.base.nicPgPerc = 100 - this.currentLiquid.base.nicVgPerc;
+          localStorage.setItem('preferred-nic-pg', this.currentLiquid.base.nicPgPerc);
         }
       },
       methods: {
@@ -114,6 +124,9 @@ const moment = require('moment');
         },
         resetLiquidForm: function () {
           this.setCurrentLiquid({
+            base: {
+              nicPgPerc: localStorage.getItem('preferred-nic-pg')
+            },
             target: {
               batchSize: localStorage.getItem('preferred-batch-size'),
               nicStrength: localStorage.getItem('preferred-nic-strength'),
@@ -170,8 +183,8 @@ const moment = require('moment');
           var rows = [
             {
               name: 'Base nicotine',
-              ml: self.pgNicVol,
-              perc: (self.pgNicVol / self.currentLiquid.target.batchSize) * 100
+              ml: this.currentLiquid.getNicVol(),
+              perc: this.currentLiquid.getNicPercent() * 100
             },
             {
               name: 'PG (0 mg/ml)',
