@@ -4,7 +4,9 @@ const gulp = require('gulp'),
   babelify = require('babelify'),
   source = require('vinyl-source-stream'),
   path = require('path'),
-  es = require('event-stream');
+  es = require('event-stream'),
+  sass = require('gulp-sass'),
+  autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('js', () => {
   let srcFiles = [
@@ -20,8 +22,29 @@ gulp.task('js', () => {
   }));
 });
 
-gulp.task('watch', () => {
-  gulp.watch('public/src/**/*.js', ['js']);
+gulp.task('styles', () => {
+  const baseFileDir = "public/assets/css";
+  let srcFiles = [
+    "admin",
+    "login",
+    "style",
+    "user"
+  ].map(f => `${baseFileDir}/${f}.scss`);
+
+  es.merge.apply(null, srcFiles.map(file => {
+    return gulp.src(file)
+      .pipe(sass.sync().on('error', sass.logError))
+      .pipe(autoprefixer({
+        browsers: ['last 2 versions', 'ios >= 6'],
+        cascade: false
+      }))
+      .pipe(gulp.dest(baseFileDir));
+  }));
 });
 
-gulp.task('default', ['js', 'watch']);
+gulp.task('watch', () => {
+  gulp.watch('public/src/**/*.js', ['js']);
+  gulp.watch('public/assets/css/**/*.scss', ['styles']);
+});
+
+gulp.task('default', ['js', 'styles', 'watch']);

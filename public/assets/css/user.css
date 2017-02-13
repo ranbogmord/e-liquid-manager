@@ -29,6 +29,7 @@ input[type='submit'] {
   border: 1px solid #fefefe;
   padding: 10px;
   cursor: pointer;
+  -webkit-transition: color 0.2s ease, background 0.2s ease;
   transition: color 0.2s ease, background 0.2s ease; }
   button:hover,
   input[type='submit']:hover {
@@ -99,10 +100,25 @@ header#main-header {
   padding: 0 20px;
   border-bottom: 1px solid #ccc;
   width: 100%;
+  -webkit-box-flex: 100%;
+  -webkit-flex: 100%;
+  -ms-flex: 100%;
   flex: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
   flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   position: relative; }
   .theme-dark header#main-header {
@@ -123,10 +139,12 @@ header#main-header {
     position: absolute;
     right: 20px;
     top: 50%;
+    -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
     height: 40px;
     width: 40px;
     background: #2c3e50;
+    -webkit-transition: background 0.3s;
     transition: background 0.3s;
     overflow: hidden; }
     @media (max-width: 768px) {
@@ -135,9 +153,11 @@ header#main-header {
     header#main-header #mobile-menu-toggle span {
       position: absolute;
       top: 50%;
+      -webkit-transform: translateY(-50%);
       transform: translateY(-50%);
       text-indent: 9999px;
       background: #fefefe;
+      -webkit-transition: background 0.3s;
       transition: background 0.3s;
       height: 2px;
       left: 10px;
@@ -149,8 +169,13 @@ header#main-header {
         position: absolute;
         width: 100%;
         display: block;
+        -webkit-transition-duration: 0.3s;
         transition-duration: 0.3s;
+        -webkit-transition-property: top, bottom, -webkit-transform;
+        transition-property: top, bottom, -webkit-transform;
         transition-property: top, bottom, transform;
+        transition-property: top, bottom, transform, -webkit-transform;
+        -webkit-transition-delay: 0.3s, 0.3s, 0.3s;
         transition-delay: 0.3s, 0.3s, 0.3s; }
       header#main-header #mobile-menu-toggle span:before {
         top: -6px; }
@@ -161,22 +186,38 @@ header#main-header {
       header#main-header #mobile-menu-toggle.open span {
         background: none; }
         header#main-header #mobile-menu-toggle.open span:before, header#main-header #mobile-menu-toggle.open span:after {
+          -webkit-transition-delay: 0.3s, 0.3s, 0.3s;
           transition-delay: 0.3s, 0.3s, 0.3s; }
         header#main-header #mobile-menu-toggle.open span:before {
           top: 0;
+          -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg); }
         header#main-header #mobile-menu-toggle.open span:after {
           bottom: 0;
+          -webkit-transform: rotate(45deg);
           transform: rotate(45deg); }
   header#main-header #menu {
     margin: 0 0 0 auto;
     list-style-type: none;
     padding: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
     flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap; }
     @media (max-width: 768px) {
       header#main-header #menu {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
         flex-direction: column;
         position: absolute;
         top: 60px;
@@ -185,11 +226,13 @@ header#main-header {
         width: 100%;
         visibility: hidden;
         opacity: 0;
+        -webkit-transition: opacity 0.3s;
         transition: opacity 0.3s; } }
     header#main-header #menu li a {
       text-decoration: none;
       color: #2c3e50;
       background: #fefefe;
+      -webkit-transition: background 0.2s ease, color 0.2s ease;
       transition: background 0.2s ease, color 0.2s ease;
       display: block;
       height: 59px;
@@ -213,5 +256,3 @@ header#main-header {
   max-width: 90%;
   margin: 0 auto;
   padding: 20px; }
-
-/*# sourceMappingURL=user.css.map */

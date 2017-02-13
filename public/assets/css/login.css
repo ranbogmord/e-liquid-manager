@@ -29,6 +29,7 @@ input[type='submit'] {
   border: 1px solid #fefefe;
   padding: 10px;
   cursor: pointer;
+  -webkit-transition: color 0.2s ease, background 0.2s ease;
   transition: color 0.2s ease, background 0.2s ease; }
   button:hover,
   input[type='submit']:hover {
@@ -65,8 +66,17 @@ body {
   background-image: url(../img/login-bg.jpg);
   background-size: cover;
   background-position: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center; }
   body #login-box {
     width: 400px;
@@ -90,7 +100,11 @@ body {
           padding-left: 10px;
           border: 1px solid #ccc; }
       body #login-box form .actions {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-pack: end;
+        -webkit-justify-content: flex-end;
+        -ms-flex-pack: end;
         justify-content: flex-end; }
-
-/*# sourceMappingURL=login.css.map */
