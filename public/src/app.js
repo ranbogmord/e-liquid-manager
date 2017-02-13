@@ -229,7 +229,9 @@ const moment = require('moment');
     });
   };
 
-  require('viewport-units-buggyfill').init();
+  require('viewport-units-buggyfill').init({
+    hacks: require('../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks')
+  });
 
   IOConnection.on('connect', startApp);
 

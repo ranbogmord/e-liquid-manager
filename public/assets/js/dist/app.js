@@ -22254,6 +22254,132 @@ Promise.disableSynchronous = function() {
 
 },{"./core.js":6}],13:[function(require,module,exports){
 /*!
+ * viewport-units-buggyfill.hacks v0.6.0
+ * @web: https://github.com/rodneyrehm/viewport-units-buggyfill/
+ * @author: Zoltan Hawryluk - http://www.useragentman.com/
+ */
+
+(function (root, factory) {
+  'use strict';
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.viewportUnitsBuggyfillHacks = factory();
+  }
+}(this, function () {
+  'use strict';
+
+  var options;
+  var calcExpression = /calc\(/g;
+  var quoteExpression = /[\"\']/g;
+  var urlExpression = /url\([^\)]*\)/g;
+  var userAgent = window.navigator.userAgent;
+  var isBuggyIE = /MSIE [0-9]\./i.test(userAgent);
+  var isOldIE = /MSIE [0-8]\./i.test(userAgent);
+  var supportsVminmax = true;
+  var supportsVminmaxCalc = true;
+
+  // added check for IE10, IE11 and Edge < 20, since it *still* doesn't understand vmax
+  // http://caniuse.com/#feat=viewport-units
+  if (!isBuggyIE) {
+    isBuggyIE = !!navigator.userAgent.match(/Trident.*rv[ :]*1[01]\.| Edge\/1\d\./);
+  }
+
+  if (isBuggyIE === true) {
+    supportsVminmaxCalc = false;
+    supportsVminmax = false;
+  }
+
+  // iOS SAFARI, IE9, or Stock Android: abuse "content" if "viewport-units-buggyfill" specified
+  function checkHacks(declarations, rule, name, value) {
+    var needsHack = name === 'content' && value.indexOf('viewport-units-buggyfill') > -1;
+    if (!needsHack) {
+      return;
+    }
+
+    var fakeRules = value.replace(quoteExpression, '');
+    fakeRules.split(';').forEach(function(fakeRuleElement) {
+      var fakeRule = fakeRuleElement.split(':');
+      if (fakeRule.length !== 2) {
+        return;
+      }
+
+      var name = fakeRule[0].trim();
+      if (name === 'viewport-units-buggyfill') {
+        return;
+      }
+
+      var value = fakeRule[1].trim();
+      declarations.push([rule, name, value]);
+      if (calcExpression.test(value)) {
+        var webkitValue = value.replace(calcExpression, '-webkit-calc(');
+        declarations.push([rule, name, webkitValue]);
+      }
+    });
+  }
+
+  return {
+    required: function(options) {
+      return options.isMobileSafari || isBuggyIE;
+    },
+
+    initialize: function(initOptions) {
+      options = initOptions;
+
+      // Test viewport units support in calc() expressions
+      var div = document.createElement('div');
+      div.style.width = '1vmax';
+      supportsVminmax = div.style.width !== '';
+
+      // there is no accurate way to detect this programmatically.
+      if (options.isMobileSafari || options.isBadStockAndroid) {
+        supportsVminmaxCalc = false;
+      }
+
+    },
+
+    initializeEvents: function(options, refresh, _refresh) {
+      if (options.force) {
+        return;
+      }
+
+      if (isBuggyIE && !options._listeningToResize) {
+        window.addEventListener('resize', _refresh, true);
+        options._listeningToResize = true;
+      }
+    },
+
+    findDeclarations: function(declarations, rule, name, value) {
+      if (name === null) {
+        // KeyframesRule does not have a CSS-PropertyName
+        return;
+      }
+
+      checkHacks(declarations, rule, name, value);
+    },
+
+    overwriteDeclaration: function(rule, name, _value) {
+      if (isBuggyIE && name === 'filter') {
+        // remove unit "px" from complex value, e.g.:
+        // filter: progid:DXImageTransform.Microsoft.DropShadow(OffX=5.4px, OffY=3.9px, Color=#000000);
+        _value = _value.replace(/px/g, '');
+      }
+
+      return _value;
+    }
+  };
+
+}));
+
+},{}],14:[function(require,module,exports){
+/*!
  * viewport-units-buggyfill v0.6.0
  * @web: https://github.com/rodneyrehm/viewport-units-buggyfill/
  * @author: Rodney Rehm - http://rodneyrehm.de/en/
@@ -22718,7 +22844,7 @@ Promise.disableSynchronous = function() {
 
 }));
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var Liquid = require('./models/liquid');
@@ -22952,7 +23078,9 @@ var moment = require('moment');
     });
   };
 
-  require('viewport-units-buggyfill').init();
+  require('viewport-units-buggyfill').init({
+    hacks: require('../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks')
+  });
 
   IOConnection.on('connect', startApp);
 
@@ -23007,7 +23135,7 @@ var moment = require('moment');
   });
 }(jQuery);
 
-},{"./components/flavour-list":15,"./components/liquid-list":16,"./lib/ioconnection":17,"./lib/socket-connection":18,"./models/comment":19,"./models/flavour":20,"./models/liquid":21,"lodash":3,"moment":4,"viewport-units-buggyfill":13}],15:[function(require,module,exports){
+},{"../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks":13,"./components/flavour-list":16,"./components/liquid-list":17,"./lib/ioconnection":18,"./lib/socket-connection":19,"./models/comment":20,"./models/flavour":21,"./models/liquid":22,"lodash":3,"moment":4,"viewport-units-buggyfill":14}],16:[function(require,module,exports){
 'use strict';
 
 var IOConnection = require('../lib/ioconnection');
@@ -23095,7 +23223,7 @@ module.exports = Vue.component('flavour-list', {
   }
 });
 
-},{"../lib/ioconnection":17}],16:[function(require,module,exports){
+},{"../lib/ioconnection":18}],17:[function(require,module,exports){
 'use strict';
 
 var IOConnection = require('../lib/ioconnection');
@@ -23189,7 +23317,7 @@ module.exports = Vue.component('liquid-list', {
   }
 });
 
-},{"../lib/ioconnection":17}],17:[function(require,module,exports){
+},{"../lib/ioconnection":18}],18:[function(require,module,exports){
 "use strict";
 
 if (!window.IOConnection) {
@@ -23198,7 +23326,7 @@ if (!window.IOConnection) {
 
 module.exports = window.IOConnection;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -23317,7 +23445,7 @@ var SocketConnection = function () {
 
 module.exports = SocketConnection;
 
-},{"./ioconnection":17,"promise":5}],19:[function(require,module,exports){
+},{"./ioconnection":18,"promise":5}],20:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23359,7 +23487,7 @@ var Comment = function () {
 
 module.exports = Comment;
 
-},{"../lib/socket-connection":18,"promise":5}],20:[function(require,module,exports){
+},{"../lib/socket-connection":19,"promise":5}],21:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23400,7 +23528,7 @@ var Flavour = function () {
 
 module.exports = Flavour;
 
-},{"../lib/socket-connection":18,"promise":5}],21:[function(require,module,exports){
+},{"../lib/socket-connection":19,"promise":5}],22:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23558,4 +23686,4 @@ var Liquid = function () {
 
 module.exports = Liquid;
 
-},{"../lib/socket-connection":18,"promise":5}]},{},[14]);
+},{"../lib/socket-connection":19,"promise":5}]},{},[15]);
