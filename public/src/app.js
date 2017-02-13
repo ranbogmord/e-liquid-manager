@@ -229,6 +229,8 @@ const moment = require('moment');
     });
   };
 
+  require('viewport-units-buggyfill').init();
+
   IOConnection.on('connect', startApp);
 
   var checkSwipe = function () {
