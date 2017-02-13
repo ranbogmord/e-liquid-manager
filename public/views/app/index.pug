@@ -36,6 +36,18 @@ block content
                                 | Nicotine strength (mg/ml):
                                 br
                                 input(type='number', v-model='currentLiquid.base.nicStrength')
+                    .mix-container-row
+                        .form-field
+                            label
+                                | PG (%)
+                                br
+                                input(type="number", v-model="currentLiquid.base.nicPgPerc")
+                    .mix-container-row
+                        .form-field
+                            label
+                                | VG (%)
+                                br
+                                input(type="number", v-model="currentLiquid.base.nicVgPerc")
                 #target-container.mix-container
                     .mix-container-header
                         h2 Target

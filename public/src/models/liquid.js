@@ -7,12 +7,14 @@ class Liquid {
       _id: params._id || null,
       name: params.name || null,
       base: {
-        nicStrength: (params.base || {}).nicStrength || 30
+        nicStrength: (params.base || {}).nicStrength || 30,
+        nicPgPerc: params.nicPgPerc || localStorage.getItem('preferred-nic-pg') || 100,
+        nicVgPerc: params.nicVgPerc || Math.max(100 - localStorage.getItem('preferred-nic-pg'), 0) || 0
       },
       target: {
         batchSize: (params.target || {}).batchSize || localStorage.getItem('preferred-batch-size') || 30,
-        pgPercent: (params.target || {}).pgPercent || 30,
-        vgPercent: (params.target || {}).vgPercent || 70,
+        pgPercent: (params.target || {}).pgPercent || localStorage.getItem('preferred-target-pg') || 30,
+        vgPercent: (params.target || {}).vgPercent || Math.max(100 - localStorage.getItem('preferred-target-pg'), 0) || 70,
         nicStrength: (params.target || {}).nicStrength || localStorage.getItem('preferred-nic-strength') || 3
       },
       flavours: params.flavours || [],
@@ -108,8 +110,20 @@ class Liquid {
     return totalFlavourVg;
   }
 
-  getPgNicVol() {
+  getNicVol() {
     return (this.getTargetNicStrength() / this.getBaseNicStrength()) * this.getBatchSize();
+  }
+
+  getNicPercent() {
+    return this.mlToPercent(this.getNicVol());
+  }
+
+  getPgNicVol() {
+    return (this.base.nicPgPerc / 100) * this.getNicVol();
+  }
+
+  getVgNicVol() {
+    return (this.base.nicVgPerc / 100) * this.getNicVol();
   }
 
   getPgZeroVol() {
@@ -117,7 +131,7 @@ class Liquid {
   }
 
   getVgVol() {
-    return ((this.getTargetVgPercent() / 100) * this.getBatchSize()) - this.getVgFlavourVol();
+    return ((this.getTargetVgPercent() / 100) * this.getBatchSize()) - this.getVgFlavourVol() - this.getVgNicVol();
   }
 }
 
