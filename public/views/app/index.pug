@@ -35,19 +35,19 @@ block content
                             label
                                 | Nicotine strength (mg/ml):
                                 br
-                                input(type='number', v-model='currentLiquid.base.nicStrength')
+                                input(type='number', v-model='currentLiquid.base.nicStrength', min="0")
                     .mix-container-row
                         .form-field
                             label
                                 | PG (%)
                                 br
-                                input(type="number", v-model="currentLiquid.base.nicPgPerc")
+                                input(type="number", v-model="currentLiquid.base.nicPgPerc", max="100", min="0")
                     .mix-container-row
                         .form-field
                             label
                                 | VG (%)
                                 br
-                                input(type="number", v-model="currentLiquid.base.nicVgPerc")
+                                input(type="number", v-model="currentLiquid.base.nicVgPerc", max="100", min="0")
                 #target-container.mix-container
                     .mix-container-header
                         h2 Target
@@ -56,32 +56,32 @@ block content
                             label
                                 | Batch size (ml):
                                 br
-                                input(type='number', v-model='currentLiquid.target.batchSize')
+                                input(type='number', v-model='currentLiquid.target.batchSize', min="0")
                     .mix-container-row
                         .form-field
                             label
                                 | Nicotine strength (mg/ml):
                                 br
-                                input(type='number', v-model='currentLiquid.target.nicStrength')
+                                input(type='number', v-model='currentLiquid.target.nicStrength', min="0")
                     .mix-container-row
                         .form-field
                             label
                                 | PG (%):
                                 br
-                                input(type='number', v-model='currentLiquid.target.pgPercent')
+                                input(type='number', v-model='currentLiquid.target.pgPercent', max="100", min="0")
                     .mix-container-row
                         .form-field
                             label
                                 | VG (%):
                                 br
-                                input(type='number', v-model='currentLiquid.target.vgPercent')
+                                input(type='number', v-model='currentLiquid.target.vgPercent', max="100", min="0")
                 #flavour-container.mix-container
                     .mix-container-header
                         h2 Flavours
                     .mix-container-row(v-for='f in currentLiquid.flavours')
                         .flavour-field
                             span {{ f.flavour.name }}:
-                            input(type='number', v-model='f.perc')
+                            input(type='number', v-model='f.perc', max="100")
             #mixing-table
                 h2 Mixing time
                 table
