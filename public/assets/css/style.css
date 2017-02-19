@@ -422,6 +422,9 @@ header#main-header {
       border-bottom: 1px solid #333; }
     #mix-area #mixing-table table tr:last-of-type {
       border-bottom: none; }
+    #mix-area #mixing-table table tr.error {
+      background: #e74c3c;
+      color: #fefefe; }
   #mix-area #mixing-table table td, #mix-area #mixing-table table th {
     text-align: left;
     padding: 10px 10px 10px 0; }

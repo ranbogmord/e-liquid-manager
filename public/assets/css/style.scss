@@ -161,6 +161,11 @@
     &:last-of-type {
       border-bottom: none;
     }
+
+    &.error {
+      background: $warning;
+      color: $white;
+    }
   }
 
   td, th {
