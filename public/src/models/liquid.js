@@ -18,7 +18,8 @@ class Liquid {
         nicStrength: (params.target || {}).nicStrength || localStorage.getItem('preferred-nic-strength') || 3
       },
       flavours: params.flavours || [],
-      comments: params.comments || []
+      comments: params.comments || [],
+      tags: params.tags || []
     });
   }
 
@@ -34,7 +35,8 @@ class Liquid {
         vgPercent: this.target.vgPercent,
         nicStrength: this.target.nicStrength
       },
-      flavours: this.flavours
+      flavours: this.flavours,
+      tags: this.tags
     };
   }
 

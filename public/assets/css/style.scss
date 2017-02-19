@@ -80,6 +80,9 @@
 #mix-area {
   flex: 1;
 
+  display: flex;
+  flex-flow: column nowrap;
+
   .name-row {
     padding: 0 20px;
     margin-top: 20px;

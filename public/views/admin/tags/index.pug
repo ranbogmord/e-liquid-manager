@@ -1,0 +1,20 @@
+extends ../../layout_admin.pug
+
+block content
+    h1 Tags
+    a(href="/admin/tags/new").new-user-link New tag
+    div.item-list
+        .item
+            .col-60
+                span Name
+            .col-20.hide-tablet-landscape
+                span Created
+            .col-20.hide-tablet-landscape
+                span Last updated
+
+        each row in (tags || [])
+            .item
+                .col-60
+                    a(href="/admin/tags/" + row._id)= row.name
+                .col-20.hide-tablet-landscape= row.createdAt
+                .col-20.hide-tablet-landscape= row.updatedAt

@@ -5,6 +5,7 @@ router.use('/users', require('./users'));
 router.use('/flavours', require('./flavours'));
 router.use('/flavourvendors', require('./flavourvendors'));
 router.use('/statistics', require('./statistics'));
+router.use('/tags', require('./tags'));
 
 router.get('/', (req, res) => {
   models.User.find({}).count().exec((err, userCount) => {

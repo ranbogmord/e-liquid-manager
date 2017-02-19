@@ -1,6 +1,7 @@
 const path = require('path');
 const passport = require('passport');
 const authorization = require('../lib/authorization');
+const models = require('../models');
 
 module.exports = app => {
   app.get('/', authorization.isAuthenticated, (req, res) => {
@@ -44,6 +45,26 @@ module.exports = app => {
       if (err) return res.status(500).send('Failed to save user');
 
       return res.redirect('/me');
+    });
+  });
+
+  app.get('/tags/ajax', (req, res) => {
+    models.Tag.find({
+      name: new RegExp(req.query.q, "i")
+    }).then(tags => {
+      return res.json({
+        items: tags.map((t) => {
+          return {
+            label: t.name,
+            value: t._id
+          };
+        })
+      });
+    })
+    .catch(err => {
+      return res.json({
+        items: []
+      });
     });
   });
 };
