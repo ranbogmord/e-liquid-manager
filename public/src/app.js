@@ -6,6 +6,8 @@ const SocketConnection = require('./lib/socket-connection');
 const _ = require('lodash');
 const moment = require('moment');
 
+var appIsBooted = false;
+
 !function ($) {
   var roundingFilter = Vue.filter('round', function (val, decimals) {
     if (!decimals && decimals != 0) {
@@ -246,7 +248,13 @@ const moment = require('moment');
     hacks: require('../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks')
   });
 
-  IOConnection.on('connect', startApp);
+
+  IOConnection.on('connect', function () {
+    if (!appIsBooted) {
+      appIsBooted = true;
+      startApp();
+    }
+  });
 
   var checkSwipe = function () {
     if (window.innerWidth > 768) {
