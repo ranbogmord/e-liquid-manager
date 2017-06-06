@@ -12,7 +12,7 @@ block content
             ul#menu
                 li
                     a(href='/me') Profile
-                li
+                //li
                     a(href='https://github.com/ranbogmord/e-liquid-manager/issues/new', target="_blank") Suggestions
                 li
                     a(href='/logout') Logout
@@ -99,7 +99,8 @@ block content
                         th {{ mixingTableTotals.perc | round(2) }} / {{ mixingTableTotals.flavourPerc | round(2) }} %
 
             .actions-row
-                button.primary(@click.prevent='saveLiquid') Save
+                button.warning.pull-left(@click.prevent='archiveLiquid', v-if="currentLiquid._id") Archive
+                button.primary.pull-right(@click.prevent='saveLiquid') Save
                 button.warning(@click.prevent='resetLiquidForm') Cancel
 
             #comments(v-if="currentLiquid._id")

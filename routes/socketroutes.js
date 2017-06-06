@@ -172,6 +172,24 @@ module.exports = (io, socket) => {
     });
   });
 
+  socket.on('liquid:archive', (data, respond) => {
+    if (!data._id) {
+      return respond();
+    }
+
+    models.Liquid.findById(data._id)
+    .then((liq) => {
+      liq.deletedAt = Date.now();
+
+      liq.save(err => {
+        if (err) return respond({error: err});
+
+        socket.emit('liquid:archived', liq);
+        return respond(liq);
+      });
+    });
+  });
+
   socket.on('flavour:list', (respond) => {
     models.Flavour.find({})
     .populate('vendor')

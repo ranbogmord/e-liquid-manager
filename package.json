@@ -12,6 +12,7 @@
   "dependencies": {
     "async": "2.1.4",
     "autoprefixer": "6.7.2",
+    "axios": "0.16.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.15.2",
     "browser-request": "0.3.3",

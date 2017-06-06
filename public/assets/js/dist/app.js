@@ -22937,17 +22937,29 @@ var appIsBooted = false;
             console.log(err);
           });
         },
-        saveComment: function saveComment() {
+        archiveLiquid: function archiveLiquid() {
           var _this3 = this;
 
+          if (confirm("Are you sure?")) {
+            this.currentLiquid.archive().then(function () {
+              _this3.resetLiquidForm();
+            }).catch(function (err) {
+              alert(err.message);
+              console.log(err);
+            });
+          }
+        },
+        saveComment: function saveComment() {
+          var _this4 = this;
+
           this.newComment.save().then(function (comment) {
-            if (!_.isArray(_this3.currentLiquid.comments)) {
-              _this3.currentLiquid.comments = [];
+            if (!_.isArray(_this4.currentLiquid.comments)) {
+              _this4.currentLiquid.comments = [];
             }
 
-            _this3.currentLiquid.comments.unshift(comment);
-            _this3.newComment = new Comment({
-              liquid: _this3.currentLiquid._id
+            _this4.currentLiquid.comments.unshift(comment);
+            _this4.newComment = new Comment({
+              liquid: _this4.currentLiquid._id
             });
           }).catch(function (err) {
             alert(err.message);
@@ -22955,13 +22967,13 @@ var appIsBooted = false;
           });
         },
         removeComment: function removeComment(comment) {
-          var _this4 = this;
+          var _this5 = this;
 
           if (confirm("Are you sure? This is irreverisble!")) {
             SocketConnection.removeComment(comment._id).then(function () {
-              var idx = _this4.currentLiquid.comments.indexOf(comment);
+              var idx = _this5.currentLiquid.comments.indexOf(comment);
               if (idx !== -1) {
-                _this4.currentLiquid.comments.splice(idx, 1);
+                _this5.currentLiquid.comments.splice(idx, 1);
               }
             }).catch(function (err) {
               alert(err.message);
@@ -22991,13 +23003,13 @@ var appIsBooted = false;
           });
         },
         getMixingTableTotalFlavourings: function getMixingTableTotalFlavourings() {
-          var _this5 = this;
+          var _this6 = this;
 
           var totalFlavourMl = 0;
           var totalFlavourPerc = 0;
 
           this.currentLiquid.flavours.forEach(function (f) {
-            totalFlavourMl += _this5.currentLiquid.percentToMl(f.perc);
+            totalFlavourMl += _this6.currentLiquid.percentToMl(f.perc);
             totalFlavourPerc += f.perc;
           });
 
@@ -23008,12 +23020,12 @@ var appIsBooted = false;
         }
       },
       created: function created() {
-        var _this6 = this;
+        var _this7 = this;
 
         this.resetLiquidForm();
 
         SocketConnection.fetchVendors().then(function (vendors) {
-          _this6.availableVendors = vendors;
+          _this7.availableVendors = vendors;
         });
       },
       computed: {
@@ -23398,6 +23410,23 @@ var SocketConnection = function () {
       });
     }
   }, {
+    key: 'archiveLiquid',
+    value: function archiveLiquid(liquid) {
+      return new Promise(function (resolve, reject) {
+        IOConnection.emit('liquid:archive', liquid, function (res) {
+          if (res.error) {
+            if (_typeof(res.error) === "object") {
+              return reject(new Error("Failed to archive liquid"));
+            } else {
+              return reject(new Error(res.error));
+            }
+          }
+
+          return resolve();
+        });
+      });
+    }
+  }, {
     key: 'createFlavour',
     value: function createFlavour(flavour) {
       return new Promise(function (resolve, reject) {
@@ -23618,6 +23647,21 @@ var Liquid = function () {
       });
     }
   }, {
+    key: 'archive',
+    value: function archive() {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        var liq = _this2.toObject();
+
+        if (!liq._id) {
+          return resolve();
+        }
+
+        SocketConnection.archiveLiquid(liq).then(resolve).catch(reject);
+      });
+    }
+  }, {
     key: 'getBatchSize',
     value: function getBatchSize() {
       return this.target.batchSize;
@@ -23655,7 +23699,7 @@ var Liquid = function () {
   }, {
     key: 'getPgFlavourVol',
     value: function getPgFlavourVol() {
-      var _this2 = this;
+      var _this3 = this;
 
       var totalFlavourPg = 0;
 
@@ -23664,7 +23708,7 @@ var Liquid = function () {
           return;
         }
 
-        totalFlavourPg += _this2.percentToMl(f.perc);
+        totalFlavourPg += _this3.percentToMl(f.perc);
       });
 
       return totalFlavourPg;
@@ -23672,7 +23716,7 @@ var Liquid = function () {
   }, {
     key: 'getVgFlavourVol',
     value: function getVgFlavourVol() {
-      var _this3 = this;
+      var _this4 = this;
 
       var totalFlavourVg = 0;
 
@@ -23681,7 +23725,7 @@ var Liquid = function () {
           return;
         }
 
-        totalFlavourVg += _this3.percentToMl(f.perc);
+        totalFlavourVg += _this4.percentToMl(f.perc);
       });
 
       return totalFlavourVg;

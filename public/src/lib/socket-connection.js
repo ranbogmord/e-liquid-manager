@@ -34,6 +34,22 @@ class SocketConnection {
     });
   }
 
+  static archiveLiquid(liquid) {
+    return new Promise((resolve, reject) => {
+      IOConnection.emit('liquid:archive', liquid, function (res) {
+        if (res.error) {
+          if (typeof res.error === "object") {
+            return reject(new Error("Failed to archive liquid"));
+          } else {
+            return reject(new Error(res.error));
+          }
+        }
+
+        return resolve();
+      });
+    });
+  }
+
   static createFlavour(flavour) {
     return new Promise((resolve, reject) => {
       IOConnection.emit('flavour:create', {

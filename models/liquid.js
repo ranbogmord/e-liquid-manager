@@ -20,6 +20,7 @@ const liquidSchema = new Schema({
   ],
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  deletedAt: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
@@ -30,7 +31,8 @@ liquidSchema.statics.findPopulatedByAuthor = function (author) {
   }
 
   return this.find({
-    author: author
+    author: author,
+    deletedAt: null
   }, null, {
     sort: 'name'
   })

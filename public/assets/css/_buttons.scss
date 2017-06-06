@@ -42,4 +42,14 @@ input[type='submit'] {
       color: $warning;
     }
   }
+
+  &.pull-left {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  &.pull-right {
+    margin-left: auto;
+    margin-right: 0;
+  }
 }

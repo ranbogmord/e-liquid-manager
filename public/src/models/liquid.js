@@ -54,6 +54,18 @@ class Liquid {
     });
   }
 
+  archive() {
+    return new Promise((resolve, reject) => {
+      const liq = this.toObject();
+
+      if (!liq._id) {
+        return resolve();
+      }
+
+      SocketConnection.archiveLiquid(liq).then(resolve).catch(reject);
+    });
+  }
+
   getBatchSize() {
     return this.target.batchSize;
   }

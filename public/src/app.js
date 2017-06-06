@@ -88,6 +88,18 @@ var appIsBooted = false;
             console.log(err);
           })
         },
+        archiveLiquid: function () {
+          if (confirm("Are you sure?")) {
+            this.currentLiquid.archive()
+            .then(() => {
+              this.resetLiquidForm();
+            })
+            .catch(err => {
+              alert(err.message);
+              console.log(err);
+            });
+          }
+        },
         saveComment: function () {
           this.newComment.save()
           .then(comment => {

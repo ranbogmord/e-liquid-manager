@@ -221,11 +221,19 @@
 .actions-row {
   padding: 0 20px;
   margin-top: 20px;
-  text-align: right;
+  display: flex;
   margin-bottom: 40px;
 
   button {
-    margin-left: 20px;
+    //margin-left: 20px;
+
+    &:not(.pull-right) {
+      margin-left: 20px;
+    }
+
+    &.pull-left {
+      margin-left: 0;
+    }
   }
 }
 
