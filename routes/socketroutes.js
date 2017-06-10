@@ -27,7 +27,7 @@ module.exports = (io, socket) => {
         vgPercent: (data.target || {}).vgPercent,
         nicStrength: (data.target || {}).nicStrength
       },
-      flavours: (data.flavours || []).filter(f => { return !!f }).map(f => {
+      flavours: (data.flavours || []).filter(f => { return !!f && f.perc > 0; }).map(f => {
         if (typeof f.flavour == 'object') {
           f.flavour = f.flavour._id
         }
