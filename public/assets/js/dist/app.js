@@ -22870,7 +22870,7 @@ var appIsBooted = false;
   var startApp = function startApp() {
     console.log('Booting app');
 
-    var eLiquidApp = new Vue({
+    var eLiquidApp = window.eLiquidApp = new Vue({
       el: '#e-liquid-app',
       data: {
         mode: 'edit',
@@ -22909,6 +22909,14 @@ var appIsBooted = false;
         }
       },
       methods: {
+        formatFlavourName: function formatFlavourName(item) {
+          var name = item.name;
+          if (item.vendor) {
+            name += " " + (item.vendor.abbr || "");
+          }
+
+          return name;
+        },
         setCurrentLiquid: function setCurrentLiquid(data) {
           this.currentLiquid = new Liquid(data || {});
           if (data && data._id) {
@@ -23062,8 +23070,13 @@ var appIsBooted = false;
           }];
 
           self.currentLiquid.flavours.forEach(function (f) {
+            var name = f.flavour.name;
+            if (f.flavour && f.flavour.vendor) {
+              name += " " + (f.flavour.vendor.abbr || "");
+            }
+
             rows.push({
-              name: f.flavour.name,
+              name: name,
               perc: f.perc,
               ml: f.perc / 100 * self.currentLiquid.target.batchSize
             });
@@ -23247,7 +23260,7 @@ module.exports = Vue.component('flavour-list', {
   },
   methods: {
     displayName: function displayName(item) {
-      return item.name;
+      return item.name + ' ' + ((item.vendor || {}).abbr || "");
     },
     onItemClicked: function onItemClicked(item) {
       this.$emit('flavour-added', item);

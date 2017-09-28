@@ -37,7 +37,13 @@ liquidSchema.statics.findPopulatedByAuthor = function (author) {
     sort: 'name'
   })
   .populate('author')
-  .populate('flavours.flavour')
+  // .populate('flavours.flavour')
+  .populate({
+    path: 'flavours.flavour',
+    populate: {
+      path: 'vendor'
+    }
+  })
   .populate({
     path: 'comments',
     populate: {
@@ -56,7 +62,12 @@ liquidSchema.statics.findPopulatedById = function (liquid) {
 
   return this.findById(liquid)
   .populate('author')
-  .populate('flavours.flavour')
+  .populate({
+    path: 'flavours.flavour',
+    populate: {
+      path: 'vendor'
+    }
+  })
   .populate({
     path: 'comments',
     populate: {

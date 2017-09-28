@@ -75,7 +75,7 @@ module.exports = Vue.component('flavour-list', {
   },
   methods: {
     displayName: function (item) {
-      return item.name;
+      return item.name + ' ' + ((item.vendor || {}).abbr || "");
     },
     onItemClicked: function (item) {
       this.$emit('flavour-added', item);

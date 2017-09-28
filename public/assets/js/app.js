@@ -209,6 +209,9 @@
       }
     },
     methods: {
+      formatFlavourName: function (item) {
+        return item.name + ' ' + (item.vendor || {}).abbr;
+      },
       setCurrentLiquid: function (data) {
         this.currentLiquid = {
           _id: data._id,
@@ -395,8 +398,13 @@
         ];
 
         self.currentLiquid.flavours.forEach(function (f) {
+          var name = f.flavour.name;
+          if (f.flavour && f.flavour.vendor) {
+             name += " " + f.flavour.vendor.abbr;
+          }
+
           rows.push({
-            name: f.flavour.name,
+            name: name,
             perc: f.perc,
             ml: (f.perc / 100) * self.currentLiquid.target.batchSize
           });

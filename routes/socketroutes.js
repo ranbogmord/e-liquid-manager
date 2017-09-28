@@ -200,12 +200,12 @@ module.exports = (io, socket) => {
         });
       }
 
-      flavours = flavours.map((flav) => {
-        if (flav.vendor) {
-          flav.name = flav.name + " " + flav.vendor.abbr;
+      flavours = flavours.map(f => {
+        if (!f.vendor) {
+          f.vendor = {};
         }
 
-        return flav;
+        return f;
       });
 
       return respond(flavours);
@@ -228,8 +228,15 @@ module.exports = (io, socket) => {
         });
       }
 
-      io.emit('flavour:created', flavour);
-      return respond(flavour);
+      if (flavour.vendor) {
+        return flavour.populate('vendor', function () {
+          io.emit('flavour:created', flavour);
+          return respond(flavour);
+        });
+      } else {
+        io.emit('flavour:created', flavour);
+        return respond(flavour);
+      }
     });
   });
 
