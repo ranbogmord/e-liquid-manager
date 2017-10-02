@@ -9,3 +9,13 @@ template#searchable-list-tpl
         ul.searchable-list--search-results
             li.searchable-list--search-result(v-for='r in results', @click.prevent='onItemClicked(r)')
                 | {{ displayName(r) }}
+
+template#modal-tpl
+    .modal-overlay
+        .modal-container
+            .modal-header
+                slot(name="header")
+            .modal-content
+                slot(name="content")
+            .modal-footer
+                button.primary(@click.prevent="closeModal") Close

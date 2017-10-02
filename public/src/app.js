@@ -34,7 +34,9 @@ var appIsBooted = false;
         }),
         newComment: new Comment(),
         availableVendors: [],
-        availableLiquids: []
+        availableLiquids: [],
+        concentrateModalOpen: false,
+        concentrateAmount: 100
       },
       watch: {
         'currentLiquid.target.pgPercent': function () {
@@ -61,6 +63,10 @@ var appIsBooted = false;
         }
       },
       methods: {
+        openConcentrateModal: function () {
+          console.log("open");
+          this.concentrateModalOpen = true;
+        },
         formatFlavourName: function (item) {
           if (!item) {
             item = {};
@@ -212,6 +218,28 @@ var appIsBooted = false;
         });
       },
       computed: {
+        concentrateRows: function () {
+          let self = this;
+          if (!this.currentLiquid.flavours.length) {
+            return [];
+          }
+
+          let totalPerc = this.currentLiquid.flavours.map(function (item) {
+            return item.perc;
+          }).reduce(function (tot, item) {
+            return tot + item;
+          }, 0);
+
+          return this.currentLiquid.flavours.map(function (item) {
+            let newPerc = totalPerc ? item.perc / totalPerc : 0;
+            return {
+              name: self.formatFlavourName(item.flavour),
+              perc: newPerc * 100,
+              origPerc: item.perc,
+              ml: newPerc * self.concentrateAmount
+            };
+          });
+        },
         flavourPgVol: function () {
           return this.currentLiquid.getPgFlavourVol();
         },
@@ -281,7 +309,8 @@ var appIsBooted = false;
       },
       components: {
         'liquid-list': require('./components/liquid-list'),
-        'flavour-list': require('./components/flavour-list')
+        'flavour-list': require('./components/flavour-list'),
+        'modal': require('./components/modal')
       },
       filters: {
         'round': roundingFilter,

@@ -84,6 +84,7 @@ block content
                             input(type='number', v-model='f.perc', max="100", min="0", step="0.25")
             #mixing-table
                 h2 Mixing time
+                a(v-if="currentLiquid.flavours.length > 0", @click.prevent="openConcentrateModal()", href="#") Make concentrate
                 table
                     tr
                         th What
@@ -150,6 +151,26 @@ block content
                 button.primary.expand(@click.prevent='createFlavour') Add
                 button.warning.expand(@click.prevent='resetFlavourForm') Cancel
 
+        modal#concentrate-modal(v-show="currentLiquid.flavours.length > 0 && concentrateModalOpen", @close-modal="concentrateModalOpen = false")
+            h2(slot="header") Concentrate Calculator
+
+            div(slot="content")
+                .form-field
+                    label
+                        | Amount (ml):
+                        br
+                        input.concentrate-amount(v-model="concentrateAmount", placeholder="Amount (ml)")
+                table.concentrate-rows
+                    tr
+                        th Flavour
+                        th ml
+                        th %
+                        th Original %
+                    tr(v-for="row in concentrateRows")
+                        td {{ row.name }}
+                        td {{ row.ml | round(2) }}
+                        td {{ row.perc | round(2) }}
+                        td {{ row.origPerc | round(2) }}
     include ../partials/templates.pug
 
 block append scripts

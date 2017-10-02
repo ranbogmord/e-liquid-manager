@@ -22883,7 +22883,9 @@ var appIsBooted = false;
         }),
         newComment: new Comment(),
         availableVendors: [],
-        availableLiquids: []
+        availableLiquids: [],
+        concentrateModalOpen: false,
+        concentrateAmount: 100
       },
       watch: {
         'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
@@ -22910,6 +22912,10 @@ var appIsBooted = false;
         }
       },
       methods: {
+        openConcentrateModal: function openConcentrateModal() {
+          console.log("open");
+          this.concentrateModalOpen = true;
+        },
         formatFlavourName: function formatFlavourName(item) {
           if (!item) {
             item = {};
@@ -23065,6 +23071,28 @@ var appIsBooted = false;
         });
       },
       computed: {
+        concentrateRows: function concentrateRows() {
+          var self = this;
+          if (!this.currentLiquid.flavours.length) {
+            return [];
+          }
+
+          var totalPerc = this.currentLiquid.flavours.map(function (item) {
+            return item.perc;
+          }).reduce(function (tot, item) {
+            return tot + item;
+          }, 0);
+
+          return this.currentLiquid.flavours.map(function (item) {
+            var newPerc = totalPerc ? item.perc / totalPerc : 0;
+            return {
+              name: self.formatFlavourName(item.flavour),
+              perc: newPerc * 100,
+              origPerc: item.perc,
+              ml: newPerc * self.concentrateAmount
+            };
+          });
+        },
         flavourPgVol: function flavourPgVol() {
           return this.currentLiquid.getPgFlavourVol();
         },
@@ -23130,7 +23158,8 @@ var appIsBooted = false;
       },
       components: {
         'liquid-list': require('./components/liquid-list'),
-        'flavour-list': require('./components/flavour-list')
+        'flavour-list': require('./components/flavour-list'),
+        'modal': require('./components/modal')
       },
       filters: {
         'round': roundingFilter,
@@ -23208,7 +23237,7 @@ var appIsBooted = false;
   });
 }(jQuery);
 
-},{"../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks":13,"./components/flavour-list":16,"./components/liquid-list":17,"./lib/ioconnection":18,"./lib/socket-connection":19,"./models/comment":20,"./models/flavour":21,"./models/liquid":22,"lodash":3,"moment":4,"viewport-units-buggyfill":14}],16:[function(require,module,exports){
+},{"../../node_modules/viewport-units-buggyfill/viewport-units-buggyfill.hacks":13,"./components/flavour-list":16,"./components/liquid-list":17,"./components/modal":18,"./lib/ioconnection":19,"./lib/socket-connection":20,"./models/comment":21,"./models/flavour":22,"./models/liquid":23,"lodash":3,"moment":4,"viewport-units-buggyfill":14}],16:[function(require,module,exports){
 'use strict';
 
 var IOConnection = require('../lib/ioconnection');
@@ -23296,7 +23325,7 @@ module.exports = Vue.component('flavour-list', {
   }
 });
 
-},{"../lib/ioconnection":18}],17:[function(require,module,exports){
+},{"../lib/ioconnection":19}],17:[function(require,module,exports){
 'use strict';
 
 var IOConnection = require('../lib/ioconnection');
@@ -23390,7 +23419,19 @@ module.exports = Vue.component('liquid-list', {
   }
 });
 
-},{"../lib/ioconnection":18}],18:[function(require,module,exports){
+},{"../lib/ioconnection":19}],18:[function(require,module,exports){
+'use strict';
+
+module.exports = Vue.component('modal', {
+  template: "#modal-tpl",
+  methods: {
+    closeModal: function closeModal() {
+      this.$emit('close-modal');
+    }
+  }
+});
+
+},{}],19:[function(require,module,exports){
 "use strict";
 
 if (!window.IOConnection) {
@@ -23399,7 +23440,7 @@ if (!window.IOConnection) {
 
 module.exports = window.IOConnection;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -23546,7 +23587,7 @@ var SocketConnection = function () {
 
 module.exports = SocketConnection;
 
-},{"./ioconnection":18,"promise":5}],20:[function(require,module,exports){
+},{"./ioconnection":19,"promise":5}],21:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23588,7 +23629,7 @@ var Comment = function () {
 
 module.exports = Comment;
 
-},{"../lib/socket-connection":19,"promise":5}],21:[function(require,module,exports){
+},{"../lib/socket-connection":20,"promise":5}],22:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23629,7 +23670,7 @@ var Flavour = function () {
 
 module.exports = Flavour;
 
-},{"../lib/socket-connection":19,"promise":5}],22:[function(require,module,exports){
+},{"../lib/socket-connection":20,"promise":5}],23:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23823,4 +23864,4 @@ var Liquid = function () {
 
 module.exports = Liquid;
 
-},{"../lib/socket-connection":19,"promise":5}]},{},[15]);
+},{"../lib/socket-connection":20,"promise":5}]},{},[15]);
