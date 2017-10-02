@@ -64,6 +64,9 @@ input[type='submit'] {
   input[type='submit'].pull-right {
     margin-left: auto;
     margin-right: 0; }
+    button.pull-right + .pull-right,
+    input[type='submit'].pull-right + .pull-right {
+      margin-left: 20px; }
 
 .form-field {
   width: 100%;
@@ -465,14 +468,24 @@ header#main-header {
       color: #e74c3c;
       cursor: pointer; }
 
+.version-row {
+  padding: 0 20px;
+  margin-top: 20px;
+  margin-bottom: 40px; }
+  .version-row select {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    background-color: #fefefe;
+    border-color: #000; }
+
 .actions-row {
   padding: 0 20px;
   margin-top: 20px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex;
-  margin-bottom: 40px; }
+  display: flex; }
   .actions-row button:not(.pull-right) {
     margin-left: 20px; }
   .actions-row button.pull-left {

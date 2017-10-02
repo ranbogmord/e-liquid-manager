@@ -218,11 +218,24 @@
   }
 }
 
+.version-row {
+  padding: 0 20px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+
+  select {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    background-color: #fefefe;
+    border-color: #000;
+  }
+}
+
 .actions-row {
   padding: 0 20px;
   margin-top: 20px;
   display: flex;
-  margin-bottom: 40px;
 
   button {
     //margin-left: 20px;

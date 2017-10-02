@@ -33,7 +33,8 @@ var appIsBooted = false;
           isVg: false
         }),
         newComment: new Comment(),
-        availableVendors: []
+        availableVendors: [],
+        availableLiquids: []
       },
       watch: {
         'currentLiquid.target.pgPercent': function () {
@@ -61,6 +62,10 @@ var appIsBooted = false;
       },
       methods: {
         formatFlavourName: function (item) {
+          if (!item) {
+            item = {};
+          }
+
           var name = item.name;
           if (item.vendor) {
             name += " " + (item.vendor.abbr || "");
@@ -85,6 +90,24 @@ var appIsBooted = false;
             alert(err.message);
             console.log(err);
           });
+        },
+        createNewVersion: function () {
+          if (!this.currentLiquid._id) {
+            return false;
+          }
+
+          let liq = _.cloneDeep(this.currentLiquid);
+          liq.prev_version = liq._id;
+          liq._id = null;
+
+          let lastChar = liq.name.substr(-1);
+          if (_.toNumber(lastChar)) {
+            liq.name = liq.name.slice(0, -1) + (parseInt(liq.name.slice(-1), 10) + 1);
+          } else {
+            liq.name += " v2";
+          }
+
+          this.currentLiquid = liq;
         },
         saveLiquid: function () {
           this.currentLiquid.save()
@@ -152,7 +175,8 @@ var appIsBooted = false;
             target: {
               batchSize: localStorage.getItem('preferred-batch-size'),
               nicStrength: localStorage.getItem('preferred-nic-strength'),
-            }
+            },
+            next_version: null
           });
         },
         addFlavour: function (flavour) {
@@ -181,6 +205,9 @@ var appIsBooted = false;
 
         SocketConnection.fetchVendors().then((vendors) => {
           this.availableVendors = vendors;
+        });
+        SocketConnection.fetchLiquids(true).then(liquids => {
+          this.availableLiquids = liquids;
         });
       },
       computed: {

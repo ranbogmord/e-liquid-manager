@@ -34,7 +34,7 @@ module.exports = Vue.component('liquid-list', {
       self.rawData.splice(self.rawData.indexOf(item), 1);
     });
 
-    IOConnection.emit('liquid:list', function (data) {
+    IOConnection.emit('liquid:list', { ignoreVersions: false }, function (data) {
       if (data.error) {
         console.warn(data.error);
         return;

@@ -64,6 +64,9 @@ input[type='submit'] {
   input[type='submit'].pull-right {
     margin-left: auto;
     margin-right: 0; }
+    button.pull-right + .pull-right,
+    input[type='submit'].pull-right + .pull-right {
+      margin-left: 20px; }
 
 .form-field {
   width: 100%;

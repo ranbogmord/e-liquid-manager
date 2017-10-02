@@ -4,8 +4,58 @@ const async = require('async');
 const _ = require('lodash');
 
 module.exports = (io, socket) => {
-  socket.on('liquid:list', (respond) => {
-    models.Liquid.findPopulatedByAuthor(socket.request.user._id)
+  async function updatePreviousLiquid(oldId, newId) {
+    let liq = await models.Liquid.findOne({
+      _id: oldId
+    });
+
+    if (!liq) {
+      return new Error('Old liquid not found');
+    }
+
+    liq.next_version = newId;
+
+    let err = await liq.save();
+    if (err) {
+      return err;
+    }
+
+    return liq;
+  }
+
+  async function calculateFlavourStatistics() {
+    statistics.calculateFlavourAverage((err, results) => {
+      if (err) return false;
+
+      async.each(results, (item, callback) => {
+        models.Flavour.findOne({
+          _id: item._id
+        }, (err, flavour) => {
+          if (err) return callback(err);
+          if (!flavour) return;
+
+          flavour.basePercent = Math.round(item.value.avg * 100) / 100 || 0;
+
+          flavour.save(err => {
+            if (err) return callback(err);
+
+            io.emit('flavour:updated', flavour);
+            return callback(null);
+          });
+        });
+      }, err => {
+        if (err) {
+          console.error(new Error(err));
+        }
+      });
+    });
+
+    return true;
+  }
+
+
+  socket.on('liquid:list', (data, respond) => {
+    models.Liquid.findPopulatedByAuthor(socket.request.user._id, data.ignoreVersions)
     .then(liquids => {
       return respond(liquids);
     })
@@ -34,7 +84,8 @@ module.exports = (io, socket) => {
 
         return f;
       }),
-      author: socket.request.user._id
+      author: socket.request.user._id,
+      next_version: data.next_version || null
     });
 
     liquid.save(err => {
@@ -44,46 +95,32 @@ module.exports = (io, socket) => {
         });
       }
 
-      statistics.calculateFlavourAverage((err, results) => {
-        if (err) return false;
+      let tasks = [calculateFlavourStatistics()];
+      if (data.prev_version) {
+        tasks.push(updatePreviousLiquid(data.prev_version, liquid._id));
+      }
 
-        async.each(results, (item, callback) => {
-          models.Flavour.findOne({
-            _id: item._id
-          }, (err, flavour) => {
-            if (err) return callback(err);
-            if (!flavour) return;
-
-            flavour.basePercent = Math.round(item.value.avg * 100) / 100 || 0;
-
-            flavour.save(err => {
-              if (err) return callback(err);
-
-              io.emit('flavour:updated', flavour);
-              return callback(null);
-            });
-          });
-        }, err => {
-          if (err) {
-            console.error(new Error(err));
-          }
-        });
-      });
-
-      models.Liquid.findPopulatedById(liquid._id)
-      .then(liquid => {
-        if (!liquid) {
-          return respond({
-            error: 'Failed to create liquid'
-          });
+      Promise.all(tasks)
+      .then(function (results) {
+        if (results[1]) {
+          socket.emit('liquid:archived', results[1]);
         }
 
-        socket.emit('liquid:created', liquid);
-        respond(liquid);
-      })
-      .catch(err => {
-        return respond({
-          error: "Failed to create liquid"
+        models.Liquid.findPopulatedById(liquid._id)
+        .then(liquid => {
+          if (!liquid) {
+            return respond({
+              error: 'Failed to create liquid'
+            });
+          }
+
+          socket.emit('liquid:created', liquid);
+          respond(liquid);
+        })
+        .catch(err => {
+          return respond({
+            error: "Failed to create liquid"
+          });
         });
       });
     });
@@ -119,6 +156,7 @@ module.exports = (io, socket) => {
 
           return f;
         }),
+        next_version: data.next_version
       });
 
       liquid.save(err => {
@@ -128,29 +166,7 @@ module.exports = (io, socket) => {
           });
         }
 
-        statistics.calculateFlavourAverage((err, results) => {
-          if (err) return false;
-
-          async.each(results, (item, callback) => {
-            models.Flavour.findOne({
-              _id: item._id
-            }, (err, flavour) => {
-              if (err) return callback(err);
-              if (!flavour) return;
-
-              flavour.basePercent = (Math.round(item.value.avg * 100) / 100) || 0;
-
-              flavour.save(err => {
-                if (err) return callback(err);
-
-                io.emit('flavour:updated', flavour);
-                return callback(null);
-              });
-            });
-          }, err => {
-            if (err) console.error(new Error(err));
-          });
-        });
+        calculateFlavourStatistics();
 
         models.Liquid.findPopulatedById(liquid._id)
         .then(liquid => {

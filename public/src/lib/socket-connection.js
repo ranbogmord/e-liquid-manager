@@ -106,6 +106,14 @@ class SocketConnection {
       });
     });
   }
+
+  static fetchLiquids(ignoreVersions = false) {
+    return new Promise((resolve, reject) => {
+      IOConnection.emit('liquid:list', { ignoreVersions }, res => {
+        return resolve(res);
+      })
+    })
+  }
 }
 
 module.exports = SocketConnection;

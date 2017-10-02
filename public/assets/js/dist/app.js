@@ -22882,7 +22882,8 @@ var appIsBooted = false;
           isVg: false
         }),
         newComment: new Comment(),
-        availableVendors: []
+        availableVendors: [],
+        availableLiquids: []
       },
       watch: {
         'currentLiquid.target.pgPercent': function currentLiquidTargetPgPercent() {
@@ -22910,6 +22911,10 @@ var appIsBooted = false;
       },
       methods: {
         formatFlavourName: function formatFlavourName(item) {
+          if (!item) {
+            item = {};
+          }
+
           var name = item.name;
           if (item.vendor) {
             name += " " + (item.vendor.abbr || "");
@@ -22934,6 +22939,24 @@ var appIsBooted = false;
             alert(err.message);
             console.log(err);
           });
+        },
+        createNewVersion: function createNewVersion() {
+          if (!this.currentLiquid._id) {
+            return false;
+          }
+
+          var liq = _.cloneDeep(this.currentLiquid);
+          liq.prev_version = liq._id;
+          liq._id = null;
+
+          var lastChar = liq.name.substr(-1);
+          if (_.toNumber(lastChar)) {
+            liq.name = liq.name.slice(0, -1) + (parseInt(liq.name.slice(-1), 10) + 1);
+          } else {
+            liq.name += " v2";
+          }
+
+          this.currentLiquid = liq;
         },
         saveLiquid: function saveLiquid() {
           var _this2 = this;
@@ -23001,7 +23024,8 @@ var appIsBooted = false;
             target: {
               batchSize: localStorage.getItem('preferred-batch-size'),
               nicStrength: localStorage.getItem('preferred-nic-strength')
-            }
+            },
+            next_version: null
           });
         },
         addFlavour: function addFlavour(flavour) {
@@ -23034,6 +23058,9 @@ var appIsBooted = false;
 
         SocketConnection.fetchVendors().then(function (vendors) {
           _this7.availableVendors = vendors;
+        });
+        SocketConnection.fetchLiquids(true).then(function (liquids) {
+          _this7.availableLiquids = liquids;
         });
       },
       computed: {
@@ -23307,7 +23334,7 @@ module.exports = Vue.component('liquid-list', {
       self.rawData.splice(self.rawData.indexOf(item), 1);
     });
 
-    IOConnection.emit('liquid:list', function (data) {
+    IOConnection.emit('liquid:list', { ignoreVersions: false }, function (data) {
       if (data.error) {
         console.warn(data.error);
         return;
@@ -23500,6 +23527,17 @@ var SocketConnection = function () {
         });
       });
     }
+  }, {
+    key: 'fetchLiquids',
+    value: function fetchLiquids() {
+      var ignoreVersions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      return new Promise(function (resolve, reject) {
+        IOConnection.emit('liquid:list', { ignoreVersions: ignoreVersions }, function (res) {
+          return resolve(res);
+        });
+      });
+    }
   }]);
 
   return SocketConnection;
@@ -23619,7 +23657,9 @@ var Liquid = function () {
         nicStrength: (params.target || {}).nicStrength || localStorage.getItem('preferred-nic-strength') || 3
       },
       flavours: params.flavours || [],
-      comments: params.comments || []
+      comments: params.comments || [],
+      next_version: params.next_version || null,
+      prev_version: params.prev_version || null
     });
   }
 
@@ -23637,7 +23677,9 @@ var Liquid = function () {
           vgPercent: this.target.vgPercent,
           nicStrength: this.target.nicStrength
         },
-        flavours: this.flavours
+        flavours: this.flavours,
+        next_version: this.next_version,
+        prev_version: this.prev_version
       };
     }
   }, {

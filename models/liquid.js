@@ -22,18 +22,25 @@ const liquidSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   deletedAt: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  next_version: { type: Schema.Types.ObjectId, ref: 'Liquid' }
 });
 
-liquidSchema.statics.findPopulatedByAuthor = function (author) {
+liquidSchema.statics.findPopulatedByAuthor = function (author, ignoreVersions = false) {
   if (author._id) {
     author = author._id;
   }
 
-  return this.find({
+  let finders = {
     author: author,
     deletedAt: null
-  }, null, {
+  };
+
+  if (!ignoreVersions) {
+    finders.next_version = null;
+  }
+
+  return this.find(finders, null, {
     sort: 'name'
   })
   .populate('author')
