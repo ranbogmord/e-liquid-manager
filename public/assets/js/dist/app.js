@@ -22950,8 +22950,9 @@ var appIsBooted = false;
           liq._id = null;
 
           var lastChar = liq.name.substr(-1);
-          if (_.toNumber(lastChar)) {
-            liq.name = liq.name.slice(0, -1) + (parseInt(liq.name.slice(-1), 10) + 1);
+          var asNum = _.toNumber(lastChar);
+          if (asNum || asNum === 0) {
+            liq.name = liq.name.slice(0, -1) + (asNum + 1);
           } else {
             liq.name += " v2";
           }
