@@ -214,6 +214,11 @@
         border-bottom: 1px solid #eee;
       }
 
+      > div {
+        white-space: pre;
+        word-break: break-all;
+      }
+
       .remove {
         float: right;
         color: $warning;

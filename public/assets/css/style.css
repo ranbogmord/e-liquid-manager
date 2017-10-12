@@ -510,6 +510,9 @@ header#main-header {
       margin-bottom: 10px;
       padding-bottom: 5px;
       border-bottom: 1px solid #eee; }
+    #comments .comment-list .comment > div {
+      white-space: pre;
+      word-break: break-all; }
     #comments .comment-list .comment .remove {
       float: right;
       color: #e74c3c;
